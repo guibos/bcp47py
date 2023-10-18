@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import ConfigDict, BaseModel, field_validator
 from pydantic_core.core_schema import ValidationInfo
 
-from schemas.abstract.subtag import Subtag
+from schemas.mixin.subtag import Subtag
 from schemas.language import Language
 
 

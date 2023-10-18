@@ -5,16 +5,13 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "bcp47py"
 version = "1.0.0"
-description = ""
-authors = ["guibos"]
+description = "Provides standardized tags that is used to identify human languages and regions."
+authors = ["Guillermo Ferrer Bosque"]
 readme = "README.rst"
-packages = [{ include = "src" }]
-
 
 [tool.poetry.dependencies]
-python = "^3.11"
-pydantic = "^2.4.2"
-
+python = ">=3.9 <4.0"
+pydantic = ">=2.0 <3.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"
@@ -24,14 +21,30 @@ pytest-cov = "^4.1.0"
 pytest-xdist = "^3.3.1"
 pytest-yapf3 = "^0.7.0"
 yapf = "^0.40.2"
-
-[tool.poetry.scripts]
-update-bcp47 = "src.bcp47py.bcp47_downloader_service:BCP47DownloaderService().download()"
+tox = "^4.11.3"
 
 [tool.pytest.ini_options]
-pythonpath = "src"
+pythonpath = ["src/bcp47py"]
+addopts = "--strict-markers --yapf --yapfdiff" #--cov --cov-append -n auto
+markers = [
+    "download: download data from external resources.",
+    "non_mocked: parse full data without mocking."
+]
 
 [tool.yapf]
 COLUMN_LIMIT = 120
 
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py39, py310, py311, py312
+isolated_build = true
 
+[testenv]
+allowlist_externals = poetry
+commands_pre =
+    poetry install --no-root --sync
+commands =
+    poetry run pytest tests/ --import-mode importlib
+
+"""

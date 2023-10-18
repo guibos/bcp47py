@@ -3,8 +3,8 @@ from typing import Optional, List
 
 from pydantic import ConfigDict, BaseModel
 
-from schemas.abstract.tag import Tag
-from schemas.abstract.preferred_value_validator import PreferredValueValidator
+from schemas.mixin.tag import Tag
+from schemas.mixin.preferred_value_validator import PreferredValueValidator
 from schemas.language import Language
 from schemas.region import Region
 from schemas.variant import Variant, VariantPrefix

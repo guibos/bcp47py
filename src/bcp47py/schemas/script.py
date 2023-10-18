@@ -1,6 +1,6 @@
 from typing import Optional
 
-from schemas.abstract.subtag import Subtag
+from schemas.mixin.subtag import Subtag
 
 
 class Script(Subtag):

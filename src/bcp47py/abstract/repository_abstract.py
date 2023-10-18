@@ -31,7 +31,7 @@ class SubtagDataFinder:
     data_dict_key: BCP47Type
 
 
-class BCP47Interface(abc.ABC):
+class RepositoryAbstract(abc.ABC):
 
     def __init__(self):
         self._SUBTAG_DATA_FINDER = [
@@ -50,7 +50,7 @@ class BCP47Interface(abc.ABC):
     def languages(self) -> List[Language]:
         pass
 
-    def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False):
+    def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
         try:
             return self._tag_or_subtag_filter(subtag, self.languages, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -58,7 +58,7 @@ class BCP47Interface(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def languages_scopes(self) -> Iterable[LanguageScope]:
+    def languages_scopes(self) -> List[LanguageScope]:
         pass
 
     def get_language_scope_by_name(self, name: str) -> LanguageScope:
@@ -151,8 +151,8 @@ class BCP47Interface(abc.ABC):
         raise TagOrSubtagNotFoundError(subtag_str)
 
     def _tag_or_subtag_parser(
-        self, tag_or_subtag: str, case_sensitive: bool
-    ) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]:
+            self, tag_or_subtag: str,
+            case_sensitive: bool) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]:
         i = 0
         tag_or_subtag_data = {}
         for subtag in tag_or_subtag.split('-'):

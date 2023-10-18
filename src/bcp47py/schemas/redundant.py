@@ -3,8 +3,8 @@ from typing import Optional
 
 from pydantic import ConfigDict, BaseModel
 
-from schemas.abstract.tag import Tag
-from schemas.abstract.preferred_value_validator import PreferredValueValidator
+from schemas.mixin.tag import Tag
+from schemas.mixin.preferred_value_validator import PreferredValueValidator
 from schemas.language import Language
 from schemas.script import Script
 

@@ -3,8 +3,8 @@ import functools
 from datetime import datetime
 from typing import Optional, Dict, Any, Type, List, Union
 
-from _bcp47_base import BCP47Base
-from bcp47_interface import BCP47Interface, SubtagDataFinder
+from mixin.base import Base
+from abstract.repository_abstract import RepositoryAbstract, SubtagDataFinder
 from enums.bcp47_type import BCP47Type
 from enums.language_scope import LanguageScopeEnum
 from schemas.ext_lang import ExtLang
@@ -23,7 +23,7 @@ class _BCP47ValueAttributes:
     internal_name: str
 
 
-class BCP47Repository(BCP47Interface, BCP47Base):
+class Repository(RepositoryAbstract, Base):
     _BCP47_TYPE_PROCESSING_ORDER = [
         BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
         BCP47Type.REDUNDANT, BCP47Type.EXTLANG
@@ -114,6 +114,7 @@ class BCP47Repository(BCP47Interface, BCP47Base):
             self._languages_scopes.append(LanguageScope(scope=language_scope))
 
     def _load_bcp47(self):
+        # TODO: Improve performance open not supports %% as a newline
         with open(self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH, 'r', encoding='utf-8') as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
@@ -292,8 +293,8 @@ class BCP47Repository(BCP47Interface, BCP47Base):
         return data_dict
 
     def _parse_prefix(
-        self, prefix_list: List[str], case_sensitive: bool
-    ) -> List[Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
+            self, prefix_list: List[str],
+            case_sensitive: bool) -> List[Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
         prefix_f = []
 
         for prefix in prefix_list:

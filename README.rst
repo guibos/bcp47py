@@ -2,4 +2,4 @@
 BCP47Py
 #######
 
-Package that provide a parsed BCP47 with classes.
+Provides standardized tags that is used to identify human languages and regions.

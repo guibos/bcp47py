@@ -1,9 +1,9 @@
 from urllib.request import urlopen
 
-from _bcp47_base import BCP47Base
+from mixin.base import Base
 
 
-class BCP47DownloaderService(BCP47Base):
+class DownloaderService(Base):
     _LANGUAGE_SUBTAG_REGISTRY_URL = 'https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry'
 
     def download(self):
@@ -19,4 +19,4 @@ class BCP47DownloaderService(BCP47Base):
 
 
 if __name__ == '__main__':
-    BCP47DownloaderService().download()
+    DownloaderService().download()
