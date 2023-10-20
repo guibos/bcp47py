@@ -8,29 +8,9 @@
 
 import os
 import sys
+sys.path.insert(0, os.path.abspath('../../'))
+sys.setrecursionlimit(1500)
 
-
-def add_to_path():
-
-    partial_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../src/bcp47py')
-    workspace_path = os.path.abspath(partial_path)
-    assert os.path.exists(workspace_path)
-
-    projects = []
-
-    for current, dirs, c in os.walk(str(workspace_path)):
-        for dir in dirs:
-
-            project_path = os.path.join(workspace_path, dir, 'src')
-
-            if os.path.exists(project_path):
-                projects.append(project_path)
-
-    for project_str in projects:
-        sys.path.append(project_str)
-
-
-add_to_path()
 
 project = 'BCP47Py'
 copyright = '2023, Guillermo Ferrer Bosque'
@@ -40,7 +20,12 @@ release = 'Mozilla Public License Version 2.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.graphviz',
+]
 
 autodoc_default_options = {
     'members': True,
@@ -55,6 +40,6 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = "sphinx_rtd_theme"
 html_static_path = ['_static']
 

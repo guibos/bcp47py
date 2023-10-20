@@ -63,8 +63,10 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     _languages_scopes = (LanguageScopeEnum.COLLECTION, LanguageScopeEnum.PRIVATE_USE, LanguageScopeEnum.MACRO_LANGUAGE,
                          LanguageScopeEnum.SPECIAL)
 
-    def __init__(self):
+    def __init__(self, language_subtag_registry_file_path: str):
         super().__init__()
+        self._language_subtag_registry_file_path = (language_subtag_registry_file_path or
+                                                    self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH)
 
         self._languages: List[Language] = []
         self._languages_scopes: List[LanguageScope] = []
@@ -78,35 +80,35 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         self._load_data()
 
     @property
-    def languages(self):
+    def languages(self) -> List[Language]:
         return self._languages
 
     @property
-    def languages_scopes(self):
+    def languages_scopes(self) -> List[LanguageScope]:
         return self._languages_scopes
 
     @property
-    def ext_langs(self):
+    def ext_langs(self) -> List[ExtLang]:
         return self._ext_langs
 
     @property
-    def scripts(self):
+    def scripts(self) -> List[Script]:
         return self._scripts
 
     @property
-    def regions(self):
+    def regions(self) -> List[Region]:
         return self._regions
 
     @property
-    def variants(self):
+    def variants(self) -> List[Variant]:
         return self._variants
 
     @property
-    def grandfathered(self):
+    def grandfathered(self) -> List[Grandfathered]:
         return self._grandfathered
 
     @property
-    def redundant(self):
+    def redundant(self) -> List[Redundant]:
         return self._redundant
 
     def _load_data(self):
@@ -118,7 +120,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             self._languages_scopes.append(LanguageScope(scope=language_scope))
 
     def _load_bcp47(self):
-        with open(self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH, 'r', encoding='utf-8') as f:
+        with open(self._language_subtag_registry_file_path, 'r', encoding='utf-8') as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
         updated_at = self._get_file_date(items.pop(0))
@@ -268,7 +270,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
 
     def _replace_to_object(self, data_dict: Dict[str, Any]) -> Dict[str, Any]:
         if preferred_value := data_dict.pop('preferred_value', None):
-            data_dict['preferred_value'] = self._tag_or_subtag_parser(preferred_value, case_sensitive=True)
+            data_dict['preferred_value'] = self._tag_parser(preferred_value, case_sensitive=True)
 
         if suppress_script := data_dict.pop('suppress_script', None):
             data_dict['suppress_script'] = self.get_script_by_subtag(suppress_script, case_sensitive=True)
@@ -310,5 +312,5 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         prefix_f = []
 
         for prefix in prefix_list:
-            prefix_f.append(self._tag_or_subtag_parser(prefix, case_sensitive))
+            prefix_f.append(self._tag_parser(prefix, case_sensitive))
         return prefix_f

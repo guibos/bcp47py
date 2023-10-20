@@ -42,8 +42,9 @@ class RepositoryAbstract(abc.ABC):
             SubtagDataFinder(self.get_variant_by_subtag, BCP47Type.VARIANT)
         ]
 
-    def tag_or_subtag_parser(self, tag_or_subtag: str, case_sensitive: bool = False) -> Subtags:
-        return Subtags(**self._tag_or_subtag_parser(tag_or_subtag, case_sensitive))
+    def tag_parser(self, tag: str, case_sensitive: bool = False) -> Subtags:
+        """Parse string tag to get all subtags."""
+        return Subtags(**self._tag_parser(tag, case_sensitive))
 
     @property
     @abc.abstractmethod
@@ -118,7 +119,7 @@ class RepositoryAbstract(abc.ABC):
         """Return the list of Variants that are included in BCP47."""
 
     def get_variant_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Variant:
-        """Return the list of Variants that are included in BCP47."""
+        """Return a Variant by his subtag."""
         try:
             return self._tag_or_subtag_filter(subtag, self.variants, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -130,6 +131,7 @@ class RepositoryAbstract(abc.ABC):
         """Return the list of Grandfathered that are included in BCP47."""
 
     def get_grandfathered_by_tag(self, tag: str, case_sensitive: bool = False) -> Grandfathered:
+        """Return a Variant by his tag."""
         try:
             return self._tag_or_subtag_filter(tag, self.grandfathered, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -138,9 +140,11 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def redundant(self) -> List[Redundant]:
+        """Return the list of Redundant that are included in BCP47."""
         pass
 
     def get_redundant_by_tag(self, tag: str, case_sensitive: bool = False) -> Redundant:
+        """Return a Redundant by his tag."""
         try:
             return self._tag_or_subtag_filter(tag, self.redundant, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -158,15 +162,15 @@ class RepositoryAbstract(abc.ABC):
                 return subtag
         raise TagOrSubtagNotFoundError(subtag_str)
 
-    def _tag_or_subtag_parser(
-            self, tag_or_subtag: str,
+    def _tag_parser(
+            self, tag: str,
             case_sensitive: bool) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]:
         i = 0
         tag_or_subtag_data = {}
-        for subtag in tag_or_subtag.split('-'):
+        for subtag in tag.split('-'):
             while True:
                 if i >= len(self._SUBTAG_DATA_FINDER):
-                    raise TagOrSubtagNotFoundError(f"Subtag {subtag} of {tag_or_subtag} is not found.")
+                    raise TagOrSubtagNotFoundError(f"Subtag {subtag} of {tag} is not found.")
                 try:
                     tag_or_subtag_data[
                         self._SUBTAG_DATA_FINDER[i].data_dict_key.value] = self._SUBTAG_DATA_FINDER[i].callable(

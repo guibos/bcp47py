@@ -4,6 +4,9 @@
    :maxdepth: 2
    :caption: Contents:
 
+   quickstart.rst
+   dataclasses.rst
+
 
 
 
@@ -12,14 +15,8 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+
 
 
 ..
-
-
-.. autoclass:: repository.Repository
-   :members:
-   :show-inheritance:
 
