@@ -1,3 +1,5 @@
+"""Common aliases of BCP47Py."""
+
 from typing import Union
 
 from schemas.ext_lang import ExtLang, ExtLangPrefix, ExtLangPreferredValue

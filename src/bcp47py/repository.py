@@ -1,10 +1,12 @@
+"""Repository that provides all data from BCP47."""
+
 import dataclasses
 import functools
 from datetime import datetime
 from typing import Optional, Dict, Any, Type, List, Union
 
 from mixin.base import Base
-from abstract.repository_abstract import RepositoryAbstract, SubtagDataFinder
+from abstract.repository_abstract import RepositoryAbstract
 from enums.bcp47_type import BCP47Type
 from enums.language_scope import LanguageScopeEnum
 from schemas.ext_lang import ExtLang
@@ -18,12 +20,21 @@ from schemas.variant import Variant
 
 
 @dataclasses.dataclass
-class _BCP47ValueAttributes:
+class _BCP47ValueType:
+    """Helper dataclass that it structures the value of _BCP47_KEY_VALUE_TYPE_MAPPING dict."""
     value_type: Type
     internal_name: str
 
 
-class Repository(RepositoryAbstract, Base):
+@dataclasses.dataclass
+class _AddNewDataReturn:
+    """Helper dataclass that it structures the return data from "_add_new_data" method."""
+    data_dict: Dict[str, Any]
+    previous_key: str
+
+
+class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance-attributes
+    """Repository that provides all data from the BCP47 specification in several dataclasses."""
     _BCP47_TYPE_PROCESSING_ORDER = [
         BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
         BCP47Type.REDUNDANT, BCP47Type.EXTLANG
@@ -35,32 +46,25 @@ class Repository(RepositoryAbstract, Base):
     _ITEM_SEPARATOR = '%%'
     _KEY_VALUE_SEPARATOR = ': '
     _FILE_HEADER = 'File-Date: '
-    _VALUE_MAPPING: Dict[str, _BCP47ValueAttributes] = {
-        'Type': _BCP47ValueAttributes(value_type=BCP47Type, internal_name='bcp_type'),
-        'Subtag': _BCP47ValueAttributes(value_type=str, internal_name='subtag'),
-        'Description': _BCP47ValueAttributes(value_type=list, internal_name='description'),
-        'Suppress-Script': _BCP47ValueAttributes(value_type=str, internal_name='suppress_script'),
-        'Scope': _BCP47ValueAttributes(value_type=str, internal_name='scope'),
-        'Added': _BCP47ValueAttributes(value_type=datetime, internal_name='added'),
-        'Macrolanguage': _BCP47ValueAttributes(value_type=str, internal_name='macro_language'),
-        'Comments': _BCP47ValueAttributes(value_type=str, internal_name='comments'),
-        'Preferred-Value': _BCP47ValueAttributes(value_type=str, internal_name='preferred_value'),
-        'Deprecated': _BCP47ValueAttributes(value_type=datetime, internal_name='deprecated'),
-        'Prefix': _BCP47ValueAttributes(value_type=list, internal_name='prefix'),
-        'Tag': _BCP47ValueAttributes(value_type=str, internal_name='tag'),
+    _BCP47_KEY_VALUE_TYPE_MAPPING: Dict[str, _BCP47ValueType] = {
+        'Type': _BCP47ValueType(value_type=BCP47Type, internal_name='bcp_type'),
+        'Subtag': _BCP47ValueType(value_type=str, internal_name='subtag'),
+        'Description': _BCP47ValueType(value_type=list, internal_name='description'),
+        'Suppress-Script': _BCP47ValueType(value_type=str, internal_name='suppress_script'),
+        'Scope': _BCP47ValueType(value_type=str, internal_name='scope'),
+        'Added': _BCP47ValueType(value_type=datetime, internal_name='added'),
+        'Macrolanguage': _BCP47ValueType(value_type=str, internal_name='macro_language'),
+        'Comments': _BCP47ValueType(value_type=str, internal_name='comments'),
+        'Preferred-Value': _BCP47ValueType(value_type=str, internal_name='preferred_value'),
+        'Deprecated': _BCP47ValueType(value_type=datetime, internal_name='deprecated'),
+        'Prefix': _BCP47ValueType(value_type=list, internal_name='prefix'),
+        'Tag': _BCP47ValueType(value_type=str, internal_name='tag'),
     }
     _languages_scopes = (LanguageScopeEnum.COLLECTION, LanguageScopeEnum.PRIVATE_USE, LanguageScopeEnum.MACRO_LANGUAGE,
                          LanguageScopeEnum.SPECIAL)
 
     def __init__(self):
         super().__init__()
-        self._SUBTAG_DATA_FINDER = [
-            SubtagDataFinder(self.get_language_by_subtag, BCP47Type.LANGUAGE),
-            SubtagDataFinder(self.get_ext_lang_by_subtag, BCP47Type.EXTLANG),
-            SubtagDataFinder(self.get_script_by_subtag, BCP47Type.SCRIPT),
-            SubtagDataFinder(self.get_region_by_subtag, BCP47Type.REGION),
-            SubtagDataFinder(self.get_variant_by_subtag, BCP47Type.VARIANT)
-        ]
 
         self._languages: List[Language] = []
         self._languages_scopes: List[LanguageScope] = []
@@ -114,43 +118,43 @@ class Repository(RepositoryAbstract, Base):
             self._languages_scopes.append(LanguageScope(scope=language_scope))
 
     def _load_bcp47(self):
-        # TODO: Improve performance open not supports %% as a newline
         with open(self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH, 'r', encoding='utf-8') as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
         updated_at = self._get_file_date(items.pop(0))
-        data = [self._parse_item(item, updated_at) for item in items]
-        del items
-        data.sort(key=functools.cmp_to_key(self._sort_bcp47_items))
+        items = [self._parse_item(item, updated_at) for item in items]
+        items.sort(key=functools.cmp_to_key(self._sort_bcp47_items))
 
-        for item in data:
+        for item in items:
             self._add_item(item)
 
     def _sort_bcp47_items(self, a: Dict[str, Any], b: Dict[str, Any]) -> int:
         if a['bcp_type'] != b['bcp_type']:
             a_index = self._BCP47_TYPE_PROCESSING_ORDER.index(a['bcp_type'])
             b_index = self._BCP47_TYPE_PROCESSING_ORDER.index(b['bcp_type'])
-            return a_index - b_index
-
-        if a.get('preferred_value') is not None and b.get('preferred_value') is None:
-            return 1
+            sort_order = a_index - b_index
+        elif a.get('preferred_value') is not None and b.get('preferred_value') is None:
+            sort_order = 1
         elif a.get('preferred_value') is None and b.get('preferred_value') is not None:
-            return -1
+            sort_order = -1
         elif a.get('prefix') is not None and b.get('prefix') is None:
-            return 1
+            sort_order = 1
         elif a.get('prefix') is None and b.get('prefix') is not None:
-            return -1
+            sort_order = -1
         elif a.get('scope') is not None and b.get('scope') is None:
-            return -1
+            sort_order = -1
         elif a.get('scope') is None and b.get('scope') is not None:
-            return 1
+            sort_order = 1
         elif a.get('prefix') is not None and a.get('prefix') is not None:
             if a.get('prefix') > b.get('prefix'):
-                return 1
+                sort_order = 1
             elif a.get('prefix') < b.get('prefix'):
-                return -1
-            return 0
-        return 0
+                sort_order = -1
+            else:
+                sort_order = 0
+        else:
+            sort_order = 0
+        return sort_order
 
     def _get_file_date(self, text: str) -> datetime:
         if not text.startswith(self._FILE_HEADER):
@@ -161,58 +165,66 @@ class Repository(RepositoryAbstract, Base):
             raise RuntimeError("Unexpected file format: File-Date format is not valid") from e
 
     def _parse_item(self, item: str, updated_at: datetime) -> Dict[str, Any]:
-        # TODO: Refactor
         data = {'updated_at': updated_at}
         previous_key: Optional[str] = None
 
         for value in item.strip().split("\n"):
             if value.startswith(' '):
-                if not previous_key:
-                    raise RuntimeError(f"There was no previous data to which it should be concatenated")
-                previous_data_type = type(data[previous_key])
-                if previous_data_type == list:
-                    data[previous_key][-1] += value[1:]
-                elif previous_data_type == str:
-                    data[previous_key] += value[1:]
-                else:
-                    raise RuntimeError(f"Unexpected previous data type with a data that must be appended")
-
+                data = self._append_data(previous_key, data, value)
             else:
-                key, value = value.split(self._KEY_VALUE_SEPARATOR, 1)
-                if not (value_attributes := self._VALUE_MAPPING.get(key)):
-                    raise RuntimeError(f"Unexpected BCP47 key: {key}")
-
-                previous_key = value_attributes.internal_name
-
-                if value_attributes.value_type == list:
-                    if data.get(value_attributes.internal_name):
-                        data[value_attributes.internal_name].append(value)
-                    else:
-                        data[value_attributes.internal_name] = [value]
-                else:
-                    if data.get(value_attributes.internal_name) is not None:
-                        raise RuntimeError(f"Unexpected file format: Value key {key} is duplicated")
-
-                    if value_attributes.value_type == datetime:
-                        data[value_attributes.internal_name] = datetime.fromisoformat(value)
-                    elif value_attributes.value_type == str:
-                        data[value_attributes.internal_name] = value
-                    elif value_attributes.value_type in (BCP47Type, LanguageScopeEnum):
-                        try:
-                            data[value_attributes.internal_name] = value_attributes.value_type(value)
-                        except ValueError as e:
-                            raise RuntimeError(f"Unexpected value type: {key}") from e
-                    else:
-                        raise RuntimeError(f"Value type {value_attributes.value_type} workflow is not properly "
-                                           f"programmed")
+                add_new_data_return = self._add_new_data(data, value)
+                data = add_new_data_return.data_dict
+                previous_key = add_new_data_return.previous_key
 
         return data
+
+    @staticmethod
+    def _append_data(previous_key: Optional[str], data: Dict[str, Any], value: str) -> Dict[str, Any]:
+        if not previous_key:
+            raise RuntimeError("There was no previous data to which it should be concatenated")
+        previous_data_type = type(data[previous_key])
+        if previous_data_type == list:
+            data[previous_key][-1] += value[1:]
+        elif previous_data_type == str:
+            data[previous_key] += value[1:]
+        else:
+            raise RuntimeError("Unexpected previous data type with a data that must be appended")
+        return data
+
+    def _add_new_data(self, data_dict: Dict[str, Any], value: str) -> _AddNewDataReturn:
+        key, value = value.split(self._KEY_VALUE_SEPARATOR, 1)
+        if not (value_type := self._BCP47_KEY_VALUE_TYPE_MAPPING.get(key)):
+            raise RuntimeError(f"Unexpected BCP47 key: {key}")
+
+        previous_key = value_type.internal_name
+
+        if data_dict.get(value_type.internal_name) is not None and value_type.value_type != list:
+            raise RuntimeError(f"Unexpected file format: Value key {key} is duplicated")
+
+        if value_type.value_type == list:
+            if data_dict_value := data_dict.get(value_type.internal_name):
+                data_dict_value.append(value)
+            else:
+                data_dict[value_type.internal_name] = [value]
+        elif value_type.value_type == datetime:
+            data_dict[value_type.internal_name] = datetime.fromisoformat(value)
+        elif value_type.value_type == str:
+            data_dict[value_type.internal_name] = value
+        elif value_type.value_type in (BCP47Type, LanguageScopeEnum):
+            try:
+                data_dict[value_type.internal_name] = value_type.value_type(value)
+            except ValueError as e:
+                raise RuntimeError(f"Unexpected value type: {key}") from e
+        else:
+            raise RuntimeError(f"Value type {value_type.value_type} workflow is not properly "
+                               f"programmed")
+        return _AddNewDataReturn(data_dict=data_dict, previous_key=previous_key)
 
     def _add_item(self, data_dict: Dict[str, Any]):
         try:
             bcp_type = data_dict.pop('bcp_type')
         except KeyError:
-            raise RuntimeError(f"Unexpected workflow bcp_type was not retrieved")
+            raise RuntimeError("Unexpected workflow bcp_type was not retrieved") from KeyError
 
         data_dict = self._replace_to_object(data_dict)
 

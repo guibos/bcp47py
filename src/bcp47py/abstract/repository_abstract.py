@@ -1,6 +1,6 @@
 import abc
 import dataclasses
-from typing import List, Iterable, Dict, Union, Callable, Any
+from typing import List, Dict, Union, Callable, Any
 
 from enums.bcp47_type import BCP47Type
 from enums.language_scope import LanguageScopeEnum
@@ -48,9 +48,10 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def languages(self) -> List[Language]:
-        pass
+        """Return the list of :class:`schemas.language.Language` that are included in BCP47."""
 
     def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
+        """Return a Language by his subtag."""
         try:
             return self._tag_or_subtag_filter(subtag, self.languages, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -59,9 +60,10 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def languages_scopes(self) -> List[LanguageScope]:
-        pass
+        """Return the list of LanguagesScopes that are included in BCP47."""
 
     def get_language_scope_by_name(self, name: str) -> LanguageScope:
+        """Return a LanguageScope by his subtag."""
         try:
             langauge_scope_enum = LanguageScopeEnum(name)
         except ValueError as e:
@@ -75,9 +77,11 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def ext_langs(self) -> List[ExtLang]:
+        """Return the list of ExtLangs that are included in BCP47."""
         pass
 
     def get_ext_lang_by_subtag(self, subtag: str, case_sensitive: bool = False) -> ExtLang:
+        """Return a ExtLang by his subtag."""
         try:
             return self._tag_or_subtag_filter(subtag, self.ext_langs, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -86,9 +90,11 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def scripts(self) -> List[Script]:
+        """Return the list of Scripts that are included in BCP47."""
         pass
 
     def get_script_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Script:
+        """Return a Script by his subtag."""
         try:
             return self._tag_or_subtag_filter(subtag, self.scripts, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -97,9 +103,10 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def regions(self) -> List[Region]:
-        pass
+        """Return the list of Scripts that are included in BCP47."""
 
     def get_region_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Region:
+        """Return a Region by his subtag."""
         try:
             return self._tag_or_subtag_filter(subtag, self.regions, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -108,9 +115,10 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def variants(self) -> List[Variant]:
-        pass
+        """Return the list of Variants that are included in BCP47."""
 
     def get_variant_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Variant:
+        """Return the list of Variants that are included in BCP47."""
         try:
             return self._tag_or_subtag_filter(subtag, self.variants, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -119,7 +127,7 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def grandfathered(self) -> List[Grandfathered]:
-        pass
+        """Return the list of Grandfathered that are included in BCP47."""
 
     def get_grandfathered_by_tag(self, tag: str, case_sensitive: bool = False) -> Grandfathered:
         try:

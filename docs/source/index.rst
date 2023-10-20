@@ -6,6 +6,8 @@
 
 
 
+
+
 Indices and tables
 ==================
 
@@ -15,3 +17,9 @@ Indices and tables
 
 
 ..
+
+
+.. autoclass:: repository.Repository
+   :members:
+   :show-inheritance:
+

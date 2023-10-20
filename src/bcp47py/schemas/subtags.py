@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import ConfigDict, BaseModel
 
@@ -11,7 +11,7 @@ from schemas.variant import Variant
 
 class Subtags(BaseModel):
     language: Language
-    ext_lang: Optional[ExtLang] = None
+    ext_lang: List[ExtLang] = []
     script: Optional[Script] = None
     region: Optional[Region] = None
     variant: Optional[Variant] = None
@@ -19,7 +19,7 @@ class Subtags(BaseModel):
     @property
     def tag(self) -> str:
         return '-'.join((subtag.subtag
-                         for subtag in (self.language, self.ext_lang, self.script, self.region, self.variant)
+                         for subtag in (self.language, '-'.join(self.ext_lang), self.script, self.region, self.variant)
                          if subtag))
 
     def __hash__(self):

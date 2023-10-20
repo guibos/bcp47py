@@ -22,10 +22,15 @@ pytest-xdist = "^3.3.1"
 pytest-yapf3 = "^0.7.0"
 yapf = "^0.40.2"
 tox = "^4.11.3"
+pytest-pylint = "^0.21.0"
+
+[tool.pylint]
+max-line-length = 120
+ignore-paths = ['docs']
 
 [tool.pytest.ini_options]
 pythonpath = ["src/bcp47py"]
-addopts = "--strict-markers --yapf --yapfdiff" #--cov --cov-append -n auto
+addopts = "--strict-markers --yapf --yapfdiff --pylint" #--cov --cov-append -n auto
 markers = [
     "download: download data from external resources.",
     "non_mocked: parse full data without mocking."
