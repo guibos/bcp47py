@@ -162,9 +162,8 @@ class RepositoryAbstract(abc.ABC):
                 return subtag
         raise TagOrSubtagNotFoundError(subtag_str)
 
-    def _tag_parser(
-            self, tag: str,
-            case_sensitive: bool) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]:
+    def _tag_parser(self, tag: str,
+                    case_sensitive: bool) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]:
         i = 0
         tag_or_subtag_data = {}
         for subtag in tag.split('-'):

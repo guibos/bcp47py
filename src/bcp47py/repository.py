@@ -63,10 +63,10 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     _languages_scopes = (LanguageScopeEnum.COLLECTION, LanguageScopeEnum.PRIVATE_USE, LanguageScopeEnum.MACRO_LANGUAGE,
                          LanguageScopeEnum.SPECIAL)
 
-    def __init__(self, language_subtag_registry_file_path: str):
+    def __init__(self, language_subtag_registry_file_path: Optional[str] = None):
         super().__init__()
-        self._language_subtag_registry_file_path = (language_subtag_registry_file_path or
-                                                    self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH)
+        self._language_subtag_registry_file_path = (language_subtag_registry_file_path
+                                                    or self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH)
 
         self._languages: List[Language] = []
         self._languages_scopes: List[LanguageScope] = []

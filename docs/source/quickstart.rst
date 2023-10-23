@@ -53,7 +53,7 @@ You could get the current version of each resource
 Update data in your virtualenv package
 ======================================
 
-In some cases provide the path to the constructor could not be an option. You can force update local data with:
+In some cases provide the paths to the constructor could not be an option. You can force update local data with:
 
 .. code-block:: python
 
