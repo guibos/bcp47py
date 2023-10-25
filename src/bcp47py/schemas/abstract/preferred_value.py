@@ -2,11 +2,13 @@
 
 import abc
 from abc import ABC
+from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
+_TAG_FIELD_INFO = Field(examples=['en-GB-oxendict', 'jbo'])
 
-class PreferredValue(ABC, BaseModel):
+class PreferredValue(BaseModel, ABC):
     """The field 'Preferred-Value' contains a mapping between the record in which it appears and another tag or subtag
     (depending on the record's 'Type').  The value in this field is used for canonicalization (see Section 4.5). In
     cases where the subtag or tag also has a 'Deprecated' field, then the 'Preferred-Value' is RECOMMENDED as the best
@@ -71,6 +73,6 @@ class PreferredValue(ABC, BaseModel):
 
     @property
     @abc.abstractmethod
-    def tag(self) -> str:
+    def tag(self) -> Annotated[str, _TAG_FIELD_INFO]:
         """Returns preferred_value tag in string format. It will contain all subtags of the preferred value. Must
         return the same data that language-subtag-registry Preferred-Value field provides."""

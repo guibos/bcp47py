@@ -1,13 +1,14 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Annotated, Optional
 
 from pydantic import field_validator
 from pydantic_core.core_schema import ValidationInfo
 
-from schemas.abstrat.preferred_value import PreferredValue
-from schemas.abstrat.prefix import Prefix
+from schemas.abstract.preferred_value import PreferredValue
+from schemas.abstract.prefix import Prefix
 from schemas.mixin.subtag import Subtag
 from schemas.language import Language
+from schemas.field_info import DEPRECATED_FIELD_INFO, MACRO_LANGUAGE_FIELD_INFO
 
 
 class ExtLangPreferredValue(PreferredValue):
