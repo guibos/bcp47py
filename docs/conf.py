@@ -16,7 +16,7 @@ release = 'Mozilla Public License Version 2.0'
 
 extensions = [
     'sphinx.ext.autodoc',
-'sphinxcontrib.autodoc_pydantic',
+# 'sphinxcontrib.autodoc_pydantic',
 ]
 
 templates_path = ['_templates']

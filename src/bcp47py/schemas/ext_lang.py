@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Annotated, Optional
+from typing import List, Optional, Annotated
 
 from pydantic import field_validator
 from pydantic_core.core_schema import ValidationInfo
@@ -14,7 +14,7 @@ from schemas.field_info import DEPRECATED_FIELD_INFO, MACRO_LANGUAGE_FIELD_INFO
 class ExtLangPreferredValue(PreferredValue):
     """Class that implements the only subtag, language, that could be set as preferred value from an ExtLang type.
 
-    For more information about preferred value check PreferredValue class."""
+    Check :class:schemas.abstract.preferred_value.PreferredValue class for more information about preferred value."""
     language: Language
 
     @property
@@ -25,7 +25,7 @@ class ExtLangPreferredValue(PreferredValue):
 class ExtLangPrefix(Prefix):
     """Class that implements the only subtag, language, that could be set as preferred value from an ExtLang type.
 
-    For more information about prefix check Prefix class."""
+    check :class:schemas.abstract.prefix.Prefix class for more information about prefix."""
     language: Language
 
     @property
@@ -62,11 +62,11 @@ class ExtLang(Subtag):
     extended language subtag to label a resource as some unspecified variety of Chinese, while the primary language
     subtag ('gan', 'yue', 'cmn') is preferred to using the extended language form ("zh-gan", "zh-yue", "zh-cmn").
 
-    Extraction from https://www.rfc-editor.org/rfc/bcp/bcp47.txt"""
+    Extract from https://www.rfc-editor.org/rfc/bcp/bcp47.txt"""
     preferred_value: ExtLangPreferredValue
-    prefix: List[ExtLangPrefix] = []
-    macro_language: Optional[Language] = None
-    deprecated: Optional[datetime] = None
+    prefix: List[ExtLangPrefix]
+    macro_language: Annotated[Optional[Language], MACRO_LANGUAGE_FIELD_INFO] = None
+    deprecated: Annotated[Optional[datetime], DEPRECATED_FIELD_INFO] = None
 
     @field_validator('preferred_value')
     def preferred_value_subtag_validator(cls, value: Language, validation_info: ValidationInfo):

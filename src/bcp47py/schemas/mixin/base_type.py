@@ -18,7 +18,7 @@ _DESCRIPTION_FIELD_INFO = Field(
     'Description' fields don't necessarily represent the actual native name of the item in the record, nor are any 
     of the descriptions guaranteed to be in any particular language (such as English or French, for example).
     
-    Extraction from https://www.rfc-editor.org/rfc/bcp/bcp47.txt""",
+    Extract from https://www.rfc-editor.org/rfc/bcp/bcp47.txt""",
     examples=[["English"], ["Spanish"], ["Modern Greek (1453-)"], ["Bengali", "Bangla"]])
 
 _ADDED_FIELD_INFO = Field(
@@ -27,14 +27,16 @@ _ADDED_FIELD_INFO = Field(
 )
 _UPDATED_AT_FIELD_INFO = Field(
     title="updated_at",
-    description="Field that is always the datetime version of the provided language subtag registry.",
+    description="""Field that is always the datetime version of the provided language subtag registry.
+    
+    Extract from https://www.rfc-editor.org/rfc/bcp/bcp47.txt""",
     examples=[datetime(2000, 12, 1)],
 )
 
 
 class BaseType(BaseModel):
     """Mixin that must be used by all BCP47 types. Only contains fields that are common between all BCP47 types."""
-    description: Annotated[List[str], _DESCRIPTION_FIELD_INFO] = []
+    description: Annotated[List[str], _DESCRIPTION_FIELD_INFO]
     added: Annotated[datetime, _ADDED_FIELD_INFO]
     updated_at: Annotated[datetime, _UPDATED_AT_FIELD_INFO]
 

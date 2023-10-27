@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 _TAG_FIELD_INFO = Field(examples=['en-GB-oxendict', 'jbo'])
 
+
 class PreferredValue(BaseModel, ABC):
     """The field 'Preferred-Value' contains a mapping between the record in which it appears and another tag or subtag
     (depending on the record's 'Type').  The value in this field is used for canonicalization (see Section 4.5). In
@@ -65,7 +66,7 @@ class PreferredValue(BaseModel, ABC):
     one of the source standards.  For example, if an ISO 3166-1 region code is deprecated in favor of another code,
     that SHOULD result in the addition of a 'Preferred-Value' field.
 
-    Extraction from https://www.rfc-editor.org/rfc/bcp/bcp47.txt
+    Extract from https://www.rfc-editor.org/rfc/bcp/bcp47.txt
 
     Classes that inherits from this class must have attributes for each subtag that could be used."""
 

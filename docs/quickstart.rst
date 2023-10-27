@@ -16,7 +16,7 @@ Basic Usage
 A repo instance will provide several methods to get all information or properties to get all information. For more
 information for each repo:
 
-.. autoclass:: repository.Repository
+#.. autoclass:: repository.Repository
    :members:
    :undoc-members:
    :inherited-members:

@@ -4,7 +4,6 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
 
-
 _TAG_FIELD_INFO = Field(examples=['ar', 'zh-Latn'])
 
 
@@ -34,7 +33,7 @@ class Prefix(ABC, BaseModel):
     'solba'), but also that it SHOULD appear following any of these variants in a tag. Thus, the language tag ought to
     take the form "sl-rozaj-biske-1994", rather than "sl-1994-rozaj-biske" or "sl-rozaj-1994-biske".
 
-    Extraction from https://www.rfc-editor.org/rfc/bcp/bcp47.txt
+    Extract from https://www.rfc-editor.org/rfc/bcp/bcp47.txt
 
     Classes that inherits from this class must have attributes for each subtag that could be used."""
 
