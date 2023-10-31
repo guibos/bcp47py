@@ -15,5 +15,6 @@ _TAG_FIELD_INFO = Field(
 
 
 class Tag(BaseType):
-    """Mixin that must be used by tag types (only redundant and grandfathered types)."""
+    """Mixin that must be used by tag types (only :class:schemas.redundant.Redundant and
+    :class:schemas.grandfathered.Grandfathered types)."""
     tag: Annotated[str, _TAG_FIELD_INFO]

@@ -3,8 +3,14 @@
 import dataclasses
 import functools
 from datetime import datetime
-from typing import Optional, Dict, Any, Type, List, Union
+from typing import Optional, Dict, Any, Type, List, Union, Annotated
 
+from pydantic import Field
+
+from exceptions.file_date_is_not_valid_in_language_subtag_registry_error import \
+    FileDateIsNotValidInLanguageSubtagRegistryError
+from exceptions.file_date_not_found_in_language_subtag_registry_error import \
+    FileDateNotFoundInLanguageSubtagRegistryError
 from mixin.base import Base
 from abstract.repository_abstract import RepositoryAbstract
 from enums.bcp47_type import BCP47Type
@@ -54,7 +60,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         'Scope': _BCP47ValueType(value_type=str, internal_name='scope'),
         'Added': _BCP47ValueType(value_type=datetime, internal_name='added'),
         'Macrolanguage': _BCP47ValueType(value_type=str, internal_name='macro_language'),
-        'Comments': _BCP47ValueType(value_type=str, internal_name='comments'),
+        'Comments': _BCP47ValueType(value_type=list, internal_name='comments'),
         'Preferred-Value': _BCP47ValueType(value_type=str, internal_name='preferred_value'),
         'Deprecated': _BCP47ValueType(value_type=datetime, internal_name='deprecated'),
         'Prefix': _BCP47ValueType(value_type=list, internal_name='prefix'),
@@ -64,6 +70,10 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
                          LanguageScopeEnum.SPECIAL)
 
     def __init__(self, language_subtag_registry_file_path: Optional[str] = None):
+        """Main constructor also call a method that load all the data in this instance.
+
+        :raise FileDateNotFoundInLanguageSubtagRegistryError:
+        :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
         super().__init__()
         self._language_subtag_registry_file_path = (language_subtag_registry_file_path
                                                     or self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH)
@@ -112,14 +122,25 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         return self._redundant
 
     def _load_data(self):
+        """Main function that is responsible to load all data in the instance.
+
+        :raise FileDateNotFoundInLanguageSubtagRegistryError:
+        :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
         self._load_languages_scopes()
         self._load_bcp47()
 
     def _load_languages_scopes(self):
+        """Function that create :class:schemas.language_scope.LanguageScope instances for each value of
+        :class:enums.language_scope.LanguageScopeEnum enum."""
         for language_scope in LanguageScopeEnum:
             self._languages_scopes.append(LanguageScope(scope=language_scope))
 
     def _load_bcp47(self):
+        """Main function that is responsible to parse a "language subtag registry" file and load data into the
+        instance.
+
+        :raise FileDateNotFoundInLanguageSubtagRegistryError:
+        :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
         with open(self._language_subtag_registry_file_path, 'r', encoding='utf-8') as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
@@ -131,6 +152,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             self._add_item(item)
 
     def _sort_bcp47_items(self, a: Dict[str, Any], b: Dict[str, Any]) -> int:
+        """Comparison function to sort items of a "Language subtag registry". It is very important to sort the items due
+        the processing could require other previous item."""
         if a['bcp_type'] != b['bcp_type']:
             a_index = self._BCP47_TYPE_PROCESSING_ORDER.index(a['bcp_type'])
             b_index = self._BCP47_TYPE_PROCESSING_ORDER.index(b['bcp_type'])
@@ -159,14 +182,19 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         return sort_order
 
     def _get_file_date(self, text: str) -> datetime:
+        """Return the 'File-Date' that is the version date from the "Language Subtag registry".
+        :raise FileDateNotFoundInLanguageSubtagRegistryError:
+        :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
         if not text.startswith(self._FILE_HEADER):
-            raise RuntimeError("Unexpected file format: File-Date not found")
+            raise FileDateNotFoundInLanguageSubtagRegistryError
         try:
             return datetime.fromisoformat(text[11:-1])
         except ValueError as e:
-            raise RuntimeError("Unexpected file format: File-Date format is not valid") from e
+            raise FileDateIsNotValidInLanguageSubtagRegistryError from e
 
     def _parse_item(self, item: str, updated_at: datetime) -> Dict[str, Any]:
+        """Parse an item from the "Language Subtag registry". It gets the field value pairs and return a dict. Also
+        include the current version of "Language Subtag registry"."""
         data = {'updated_at': updated_at}
         previous_key: Optional[str] = None
 

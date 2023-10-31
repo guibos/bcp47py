@@ -22,7 +22,7 @@ def last_data_path(tmp_path_factory: TempPathFactory) -> Path:
 
 @pytest.mark.download
 def test_downloader_service(last_data_path: Path):
-    with open(last_data_path, 'r') as f:
+    with open(last_data_path, 'r', encoding='utf-8') as f:
         assert f.read()
 
 
