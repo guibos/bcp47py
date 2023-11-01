@@ -12,6 +12,7 @@ from exceptions.file_date_is_not_valid_in_language_subtag_registry_error import 
 from exceptions.file_date_not_found_in_language_subtag_registry_error import \
     FileDateNotFoundInLanguageSubtagRegistryError
 from exceptions.no_previous_key_error import NoPreviousKeyError
+from exceptions.unexpected_bcp47_key_error import UnexpectedBCP47KeyError
 from exceptions.unexpected_previous_data_type_error import UnexpectedPreviousDataTypeError
 from mixin.base import Base
 from abstract.repository_abstract import RepositoryAbstract
@@ -220,9 +221,10 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
 
     @staticmethod
     def _append_data(previous_key: Optional[str], data: Dict[str, Any], value: str) -> Dict[str, Any]:
-        """Case of :func:repository.Repository._parse_item when a new line start with space. If previous key is a list
-        it should be concatenated with the last value of the list. If is string it is only required to be concatenated
-        with the value of previous key.
+        """Case of :func:repository.Repository._parse_item when a new line start with space. It occurs when the data
+        surpasses the max column size and requires to break the line. If previous key is a list it should be
+        concatenated with the last value of the list. If is string it is only required to be concatenated with the
+        value of previous key.
 
         :raise exceptions.no_previous_key_error.NoPreviousKeyError:
         :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
@@ -238,9 +240,13 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         return data
 
     def _add_new_data(self, data_dict: Dict[str, Any], value: str) -> _AddNewDataReturn:
+        """Case of :func:repository.Repository._parse_item when it is required to parse a new key value.
+
+        :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
+        """
         key, value = value.split(self._KEY_VALUE_SEPARATOR, 1)
         if not (value_type := self._BCP47_KEY_VALUE_TYPE_MAPPING.get(key)):
-            raise RuntimeError(f"Unexpected BCP47 key: {key}")
+            raise UnexpectedBCP47KeyError(key)
 
         previous_key = value_type.internal_name
 
