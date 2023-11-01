@@ -75,8 +75,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def __init__(self, language_subtag_registry_file_path: Optional[str] = None):
         """Main constructor also call a method that load all the data in this instance.
 
-        :raise FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
+        :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
+        :raise exceptions.file_date_is_not_valid_in_language_subtag_registry_error.FileDateIsNotValidInLanguageSubtagRegistryError:"""
         super().__init__()
         self._language_subtag_registry_file_path = (language_subtag_registry_file_path
                                                     or self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH)
@@ -127,8 +127,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_data(self):
         """Main function that is responsible to load all data in the instance.
 
-        :raise FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise FileDateIsNotValidInLanguageSubtagRegistryError:
+        :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
+        :raise exceptions.file_date_is_not_valid_in_language_subtag_registry_error.FileDateIsNotValidInLanguageSubtagRegistryError:
         :raise exceptions.no_previous_key_error.NoPreviousKeyError:
         :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
         self._load_languages_scopes()
@@ -144,8 +144,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         """Main function that is responsible to parse a "language subtag registry" file and load data into the
         instance.
 
-        :raise FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise FileDateIsNotValidInLanguageSubtagRegistryError:
+        :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
+        :raise exceptions.file_date_is_not_valid_in_language_subtag_registry_error.FileDateIsNotValidInLanguageSubtagRegistryError:
         :raise exceptions.no_previous_key_error.NoPreviousKeyError:
         :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
         with open(self._language_subtag_registry_file_path, 'r', encoding=self._LANGUAGE_SUBTAG_REGISTRY_ENCODING) as f:
@@ -191,8 +191,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _get_file_date(self, text: str) -> datetime:
         """Return the 'File-Date' that is the version date from the "Language Subtag registry".
 
-        :raise FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
+        :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
+        :raise exceptions.file_date_is_not_valid_in_language_subtag_registry_error.FileDateIsNotValidInLanguageSubtagRegistryError:"""
         if not text.startswith(self._FILE_HEADER):
             raise FileDateNotFoundInLanguageSubtagRegistryError()
         try:
