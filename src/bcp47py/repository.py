@@ -11,6 +11,8 @@ from exceptions.file_date_is_not_valid_in_language_subtag_registry_error import 
     FileDateIsNotValidInLanguageSubtagRegistryError
 from exceptions.file_date_not_found_in_language_subtag_registry_error import \
     FileDateNotFoundInLanguageSubtagRegistryError
+from exceptions.no_previous_key_error import NoPreviousKeyError
+from exceptions.unexpected_previous_data_type_error import UnexpectedPreviousDataTypeError
 from mixin.base import Base
 from abstract.repository_abstract import RepositoryAbstract
 from enums.bcp47_type import BCP47Type
@@ -125,7 +127,9 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         """Main function that is responsible to load all data in the instance.
 
         :raise FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
+        :raise FileDateIsNotValidInLanguageSubtagRegistryError:
+        :raise exceptions.no_previous_key_error.NoPreviousKeyError:
+        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
         self._load_languages_scopes()
         self._load_bcp47()
 
@@ -140,7 +144,9 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         instance.
 
         :raise FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
+        :raise FileDateIsNotValidInLanguageSubtagRegistryError:
+        :raise exceptions.no_previous_key_error.NoPreviousKeyError:
+        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
         with open(self._language_subtag_registry_file_path, 'r', encoding='utf-8') as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
@@ -183,18 +189,22 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
 
     def _get_file_date(self, text: str) -> datetime:
         """Return the 'File-Date' that is the version date from the "Language Subtag registry".
+
         :raise FileDateNotFoundInLanguageSubtagRegistryError:
         :raise FileDateIsNotValidInLanguageSubtagRegistryError:"""
         if not text.startswith(self._FILE_HEADER):
-            raise FileDateNotFoundInLanguageSubtagRegistryError
+            raise FileDateNotFoundInLanguageSubtagRegistryError()
         try:
             return datetime.fromisoformat(text[11:-1])
         except ValueError as e:
-            raise FileDateIsNotValidInLanguageSubtagRegistryError from e
+            raise FileDateIsNotValidInLanguageSubtagRegistryError(text) from e
 
     def _parse_item(self, item: str, updated_at: datetime) -> Dict[str, Any]:
         """Parse an item from the "Language Subtag registry". It gets the field value pairs and return a dict. Also
-        include the current version of "Language Subtag registry"."""
+        include the current version of "Language Subtag registry" (updated_at).
+
+        :raise exceptions.no_previous_key_error.NoPreviousKeyError:
+        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
         data = {'updated_at': updated_at}
         previous_key: Optional[str] = None
 
@@ -210,15 +220,21 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
 
     @staticmethod
     def _append_data(previous_key: Optional[str], data: Dict[str, Any], value: str) -> Dict[str, Any]:
+        """Case of :func:repository.Repository._parse_item when a new line start with space. If previous key is a list
+        it should be concatenated with the last value of the list. If is string it is only required to be concatenated
+        with the value of previous key.
+
+        :raise exceptions.no_previous_key_error.NoPreviousKeyError:
+        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
         if not previous_key:
-            raise RuntimeError("There was no previous data to which it should be concatenated")
+            raise NoPreviousKeyError()
         previous_data_type = type(data[previous_key])
         if previous_data_type == list:
             data[previous_key][-1] += value[1:]
         elif previous_data_type == str:
             data[previous_key] += value[1:]
         else:
-            raise RuntimeError("Unexpected previous data type with a data that must be appended")
+            raise UnexpectedPreviousDataTypeError(previous_data_type)
         return data
 
     def _add_new_data(self, data_dict: Dict[str, Any], value: str) -> _AddNewDataReturn:
