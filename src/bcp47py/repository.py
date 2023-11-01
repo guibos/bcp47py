@@ -148,7 +148,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         :raise FileDateIsNotValidInLanguageSubtagRegistryError:
         :raise exceptions.no_previous_key_error.NoPreviousKeyError:
         :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
-        with open(self._language_subtag_registry_file_path, 'r', encoding='utf-8') as f:
+        with open(self._language_subtag_registry_file_path, 'r', encoding=self._LANGUAGE_SUBTAG_REGISTRY_ENCODING) as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
         updated_at = self._get_file_date(items.pop(0))

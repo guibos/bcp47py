@@ -10,7 +10,7 @@ class DownloaderService(Base):  # pylint: disable=too-few-public-methods
 
     def download(self):
         """Method that update language subtag registry."""
-        with open(self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH, 'w', encoding='utf-8') as f:
+        with open(self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH, 'w', encoding=self._LANGUAGE_SUBTAG_REGISTRY_ENCODING) as f:
             f.write(self._get_data())
 
     def _get_data(self) -> str:
