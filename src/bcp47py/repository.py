@@ -3,10 +3,17 @@
 import dataclasses
 import functools
 from datetime import datetime
-from typing import Optional, Dict, Any, Type, List, Union, Annotated
+from typing import Optional, Dict, Any, Type, List, Union
 
-from pydantic import Field
+from pydantic import ValidationError
 
+from exceptions.invalid_ext_lang_error import InvalidExtLanguageDataError
+from exceptions.invalid_language_data_error import InvalidLanguageDataError
+from exceptions.missing_bcp_type_error import MissingBCPTypeError
+from exceptions.unexpected_bcp47_duplicated_key import UnexpectedBCP47DuplicatedKeyError
+from exceptions.unexpected_bcp47_key_type_error import UnexpectedBCP47KeyTypeError
+from exceptions.unexpected_bcp47_type_error import UnexpectedBCP47TypeError
+from exceptions.unexpected_bcp47_value_error import UnexpectedBCP47ValueError
 from exceptions.file_date_is_not_valid_in_language_subtag_registry_error import \
     FileDateIsNotValidInLanguageSubtagRegistryError
 from exceptions.file_date_not_found_in_language_subtag_registry_error import \
@@ -130,7 +137,15 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
         :raise exceptions.file_date_is_not_valid_in_language_subtag_registry_error.FileDateIsNotValidInLanguageSubtagRegistryError:
         :raise exceptions.no_previous_key_error.NoPreviousKeyError:
-        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
+        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:
+        :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
+        :raise exceptions.unexpected_bcp47_duplicated_key.UnexpectedBCP47DuplicatedKeyError:
+        :raise exceptions.unexpected_bcp47_value_error.UnexpectedBCP47ValueError:
+        :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:
+        :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
+        :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
+        :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
         self._load_languages_scopes()
         self._load_bcp47()
 
@@ -147,7 +162,15 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
         :raise exceptions.file_date_is_not_valid_in_language_subtag_registry_error.FileDateIsNotValidInLanguageSubtagRegistryError:
         :raise exceptions.no_previous_key_error.NoPreviousKeyError:
-        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
+        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:
+        :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
+        :raise exceptions.unexpected_bcp47_duplicated_key.UnexpectedBCP47DuplicatedKeyError:
+        :raise exceptions.unexpected_bcp47_value_error.UnexpectedBCP47ValueError:
+        :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:
+        :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
+        :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
+        :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
         with open(self._language_subtag_registry_file_path, 'r', encoding=self._LANGUAGE_SUBTAG_REGISTRY_ENCODING) as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
@@ -205,7 +228,11 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         include the current version of "Language Subtag registry" (updated_at).
 
         :raise exceptions.no_previous_key_error.NoPreviousKeyError:
-        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:"""
+        :raise exceptions.unexpected_previous_data_type_error.UnexpectedPreviousDataTypeError:
+        :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
+        :raise exceptions.unexpected_bcp47_duplicated_key.UnexpectedBCP47DuplicatedKeyError:
+        :raise exceptions.unexpected_bcp47_value_error.UnexpectedBCP47ValueError:
+        :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:"""
         data = {'updated_at': updated_at}
         previous_key: Optional[str] = None
 
@@ -243,6 +270,9 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         """Case of :func:repository.Repository._parse_item when it is required to parse a new key value.
 
         :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
+        :raise exceptions.unexpected_bcp47_duplicated_key.UnexpectedBCP47DuplicatedKeyError:
+        :raise exceptions.unexpected_bcp47_value_error.UnexpectedBCP47ValueError:
+        :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:
         """
         key, value = value.split(self._KEY_VALUE_SEPARATOR, 1)
         if not (value_type := self._BCP47_KEY_VALUE_TYPE_MAPPING.get(key)):
@@ -251,7 +281,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         previous_key = value_type.internal_name
 
         if data_dict.get(value_type.internal_name) is not None and value_type.value_type != list:
-            raise RuntimeError(f"Unexpected file format: Value key {key} is duplicated")
+            raise UnexpectedBCP47DuplicatedKeyError(key)
 
         if value_type.value_type == list:
             if data_dict_value := data_dict.get(value_type.internal_name):
@@ -266,42 +296,59 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             try:
                 data_dict[value_type.internal_name] = value_type.value_type(value)
             except ValueError as e:
-                raise RuntimeError(f"Unexpected value type: {key}") from e
+                raise UnexpectedBCP47ValueError(value, value_type.internal_name) from e
         else:
-            raise RuntimeError(f"Value type {value_type.value_type} workflow is not properly "
-                               f"programmed")
+            raise UnexpectedBCP47KeyTypeError(value_type.value_type)
         return _AddNewDataReturn(data_dict=data_dict, previous_key=previous_key)
 
     def _add_item(self, data_dict: Dict[str, Any]):
+        """From a dict item check the type and convert to a dataclass and loads in this object class.
+
+        :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
+        :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
+        :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
         try:
-            bcp_type = data_dict.pop('bcp_type')
+            bcp47_type: BCP47Type = data_dict.pop('bcp_type')
         except KeyError:
-            raise RuntimeError("Unexpected workflow bcp_type was not retrieved") from KeyError
+            raise MissingBCPTypeError() from KeyError
 
         data_dict = self._replace_to_object(data_dict)
 
-        if bcp_type == BCP47Type.LANGUAGE:
+        if bcp47_type == BCP47Type.LANGUAGE:
             self._load_language(data_dict)
-        elif bcp_type == BCP47Type.EXTLANG:
+        elif bcp47_type == BCP47Type.EXTLANG:
             self._load_ext_lang(data_dict)
-        elif bcp_type == BCP47Type.SCRIPT:
+        elif bcp47_type == BCP47Type.SCRIPT:
             self._load_script(data_dict)
-        elif bcp_type == BCP47Type.REGION:
+        elif bcp47_type == BCP47Type.REGION:
             self._load_region(data_dict)
-        elif bcp_type == BCP47Type.VARIANT:
+        elif bcp47_type == BCP47Type.VARIANT:
             self._load_variant(data_dict)
-        elif bcp_type == BCP47Type.GRANDFATHERED:
+        elif bcp47_type == BCP47Type.GRANDFATHERED:
             self._load_grandfathered(data_dict)
-        elif bcp_type == BCP47Type.REDUNDANT:
+        elif bcp47_type == BCP47Type.REDUNDANT:
             self._load_redundant(data_dict)
         else:
-            raise RuntimeError(f"Unexpected workflow bcp_type unknown: {bcp_type}")
+            raise UnexpectedBCP47TypeError(bcp47_type)
 
     def _load_language(self, data_dict: Dict[str, Any]):
-        self._languages.append(Language(**data_dict))
+        """Get dict data and loads to :class:schemas.language.Language dataclass. Finally append to the languages list.
+
+        :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:"""
+        try:
+            self._languages.append(Language(**data_dict))
+        except ValidationError as e:
+            raise InvalidLanguageDataError() from e
 
     def _load_ext_lang(self, data_dict: Dict[str, Any]):
-        self._ext_langs.append(ExtLang(**data_dict))
+        """Get dict data and loads to :class:schemas.ext_lang.ExtLang. Finally append to the ext languages list.
+
+        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
+        try:
+            self._ext_langs.append(ExtLang(**data_dict))
+        except ValidationError as e:
+            raise InvalidExtLanguageDataError() from e
 
     def _load_script(self, data_dict: Dict[str, Any]):
         self._scripts.append(Script(**data_dict))
