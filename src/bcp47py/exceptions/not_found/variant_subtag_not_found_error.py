@@ -1,4 +1,4 @@
-from exceptions.tag_or_subtag_not_found_error import TagOrSubtagNotFoundError
+from exceptions.not_found.tag_or_subtag_not_found_error import TagOrSubtagNotFoundError
 
 
 class VariantSubtagNotFoundError(TagOrSubtagNotFoundError):

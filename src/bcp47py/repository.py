@@ -7,8 +7,9 @@ from typing import Optional, Dict, Any, Type, List, Union
 
 from pydantic import ValidationError
 
-from exceptions.invalid_ext_lang_error import InvalidExtLanguageDataError
-from exceptions.invalid_language_data_error import InvalidLanguageDataError
+from exceptions.invalid_data.invalid_ext_lang_data_error import InvalidExtLanguageDataError
+from exceptions.invalid_data.invalid_language_data_error import InvalidLanguageDataError
+from exceptions.invalid_data.invalid_script_data_error import InvalidScriptDataError
 from exceptions.missing_bcp_type_error import MissingBCPTypeError
 from exceptions.unexpected_bcp47_duplicated_key import UnexpectedBCP47DuplicatedKeyError
 from exceptions.unexpected_bcp47_key_type_error import UnexpectedBCP47KeyTypeError
@@ -145,7 +146,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
         :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
+        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid_script_data_error.InvalidScriptDataError:"""
         self._load_languages_scopes()
         self._load_bcp47()
 
@@ -170,7 +172,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
         :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
+        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid_script_data_error.InvalidScriptDataError:"""
         with open(self._language_subtag_registry_file_path, 'r', encoding=self._LANGUAGE_SUBTAG_REGISTRY_ENCODING) as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
@@ -307,7 +310,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
         :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
+        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid_script_data_error.InvalidScriptDataError:"""
         try:
             bcp47_type: BCP47Type = data_dict.pop('bcp_type')
         except KeyError:
@@ -351,7 +355,13 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise InvalidExtLanguageDataError() from e
 
     def _load_script(self, data_dict: Dict[str, Any]):
-        self._scripts.append(Script(**data_dict))
+        """Get dict data and loads to :class:schemas.script.Script. Finally append to the scripts list.
+
+        :raise exceptions.invalid_script_data_error.InvalidScriptDataError:"""
+        try:
+            self._scripts.append(Script(**data_dict))
+        except ValidationError as e:
+            raise InvalidScriptDataError() from e
 
     def _load_region(self, data_dict: Dict[str, Any]):
         self._regions.append(Region(**data_dict))
