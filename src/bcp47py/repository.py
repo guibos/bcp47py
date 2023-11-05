@@ -145,9 +145,9 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
-        :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:
-        :raise exceptions.invalid_script_data_error.InvalidScriptDataError:"""
+        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:"""
         self._load_languages_scopes()
         self._load_bcp47()
 
@@ -171,9 +171,9 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
-        :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:
-        :raise exceptions.invalid_script_data_error.InvalidScriptDataError:"""
+        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:"""
         with open(self._language_subtag_registry_file_path, 'r', encoding=self._LANGUAGE_SUBTAG_REGISTRY_ENCODING) as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
@@ -309,9 +309,9 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
 
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
-        :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:
-        :raise exceptions.invalid_script_data_error.InvalidScriptDataError:"""
+        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:"""
         try:
             bcp47_type: BCP47Type = data_dict.pop('bcp_type')
         except KeyError:
@@ -339,29 +339,29 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_language(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:schemas.language.Language dataclass. Finally append to the languages list.
 
-        :raise exceptions.invalid_language_data_error.InvalidLanguageDataError:"""
+        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:"""
         try:
             self._languages.append(Language(**data_dict))
         except ValidationError as e:
-            raise InvalidLanguageDataError() from e
+            raise InvalidLanguageDataError(data_dict) from e
 
     def _load_ext_lang(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:schemas.ext_lang.ExtLang. Finally append to the ext languages list.
 
-        :raise exceptions.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
+        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
         try:
             self._ext_langs.append(ExtLang(**data_dict))
         except ValidationError as e:
-            raise InvalidExtLanguageDataError() from e
+            raise InvalidExtLanguageDataError(data_dict) from e
 
     def _load_script(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:schemas.script.Script. Finally append to the scripts list.
 
-        :raise exceptions.invalid_script_data_error.InvalidScriptDataError:"""
+        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:"""
         try:
             self._scripts.append(Script(**data_dict))
         except ValidationError as e:
-            raise InvalidScriptDataError() from e
+            raise InvalidScriptDataError(data_dict) from e
 
     def _load_region(self, data_dict: Dict[str, Any]):
         self._regions.append(Region(**data_dict))
