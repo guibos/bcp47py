@@ -364,7 +364,10 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise InvalidScriptDataError(data_dict) from e
 
     def _load_region(self, data_dict: Dict[str, Any]):
-        self._regions.append(Region(**data_dict))
+        try:
+            self._regions.append(Region(**data_dict))
+        except ValidationError as e:
+            raise
 
     def _load_variant(self, data_dict: Dict[str, Any]):
         self._variants.append(Variant(**data_dict))

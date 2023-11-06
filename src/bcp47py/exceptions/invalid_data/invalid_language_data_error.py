@@ -1,5 +1,4 @@
-from typing import Dict, Any
-
+"""InvalidLanguageDataError class module."""
 from enums.bcp47_type import BCP47Type
 from exceptions.invalid_data.base.invalid_data_error import InvalidDataError
 
