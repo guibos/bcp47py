@@ -52,7 +52,9 @@ class RepositoryAbstract(abc.ABC):
         """Return the list of :class:`schemas.language.Language` that are included in BCP47."""
 
     def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
-        """Return a Language by his subtag."""
+        """Return a class:`schemas.language.Language` by his subtag.
+
+        :raise exceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError:"""
         try:
             return self._tag_or_subtag_filter(subtag, self.languages, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -64,7 +66,7 @@ class RepositoryAbstract(abc.ABC):
         """Return the list of LanguagesScopes that are included in BCP47."""
 
     def get_language_scope_by_name(self, name: str) -> LanguageScope:
-        """Return a LanguageScope by his subtag."""
+        """Return a :class:schemas.language_scope.LanguageScope by his subtag."""
         try:
             langauge_scope_enum = LanguageScopeEnum(name)
         except ValueError as e:
@@ -95,7 +97,8 @@ class RepositoryAbstract(abc.ABC):
         pass
 
     def get_script_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Script:
-        """Return a Script by his subtag."""
+        """Return a Script by his subtag.
+        :raise exceptions.not_found.script_subtag_not_found_error.ScriptSubtagNotFoundError:"""
         try:
             return self._tag_or_subtag_filter(subtag, self.scripts, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -164,6 +167,9 @@ class RepositoryAbstract(abc.ABC):
 
     def _tag_parser(self, tag: str,
                     case_sensitive: bool) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]:
+        """
+        :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:
+        """
         i = 0
         tag_or_subtag_data = {}
         for subtag in tag.split('-'):

@@ -1,4 +1,4 @@
-class FileDateIsNotValidInLanguageSubtagRegistryError(Exception):
+class InvalidRegistryFileDate(Exception):
     """Exception that should be raised when the File-Date field has not the correct format."""
     _MESSAGE_TEMPLATE = 'File-Date has not the correct format: "{}"'
 
