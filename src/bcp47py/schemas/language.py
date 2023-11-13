@@ -11,10 +11,10 @@ from schemas.script import Script
 
 
 class LanguagePreferredValue(PreferredValue):
-    """Class that adds :class:schemas.language.Language attribute that could be set as preferred value for a
-    :class:schemas.language.Language type.
+    """Class that adds :class:`bcp47py.schemas.language.Language` attribute that could be set as preferred value for a
+    :class:`bcp47py.schemas.language.Language` type.
 
-    Check :class:schemas.abstract.preferred_value.PreferredValue class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
     language: 'Language'
 
     def tag(self) -> Annotated[str, TAG_FIELD_INFO]:

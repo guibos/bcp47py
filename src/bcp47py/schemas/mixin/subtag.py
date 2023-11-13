@@ -14,6 +14,6 @@ _SUBTAG_FIELD_INFO = Field(
 
 
 class Subtag(BaseType):
-    """Mixin that must be used by subtag types (all except :class:schemas.redundant.Redundant and
-    :class:schemas.grandfathered.Grandfathered types)."""
+    """Mixin that must be used by subtag types (all except :class:`bcp47py.schemas.redundant.Redundant` and
+    :class:`bcp47py.schemas.grandfathered.Grandfathered` types)."""
     subtag: Annotated[str, _SUBTAG_FIELD_INFO]

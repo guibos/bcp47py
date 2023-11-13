@@ -15,6 +15,6 @@ _TAG_FIELD_INFO = Field(
 
 
 class Tag(BaseType):
-    """Mixin that must be used by tag types (only :class:schemas.redundant.Redundant and
-    :class:schemas.grandfathered.Grandfathered types)."""
+    """Mixin that must be used by tag types (only :class:`bcp47py.schemas.redundant.Redundant` and
+    :class:`bcp47py.schemas.grandfathered.Grandfathered` types)."""
     tag: Annotated[str, _TAG_FIELD_INFO]

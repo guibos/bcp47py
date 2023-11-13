@@ -175,8 +175,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         self._load_bcp47()
 
     def _load_languages_scopes(self):
-        """Function that create :class:schemas.language_scope.LanguageScope instances for each value of
-        :class:enums.language_scope.LanguageScopeEnum enum."""
+        """Function that create :class:`bcp47py.schemas.language_scope.LanguageScope` instances for each value of
+        :class:`bcp47py.enums.language_scope.LanguageScopeEnum` enum."""
         for language_scope in LanguageScopeEnum:
             self._languages_scopes.append(LanguageScope(scope=language_scope))
 
@@ -368,7 +368,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise UnexpectedBCP47TypeError(bcp47_type)
 
     def _load_language(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:schemas.language.Language dataclass. Finally append to the languages list.
+        """Get dict data and loads to :class:`bcp47py.schemas.language.Language` dataclass. Finally append to the languages list.
 
         :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:"""
         try:
@@ -377,7 +377,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise InvalidLanguageDataError(data_dict) from e
 
     def _load_ext_lang(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:schemas.ext_lang.ExtLang. Finally append to the ext languages list.
+        """Get dict data and loads to :class:`bcp47py.schemas.ext_lang.ExtLang`. Finally append to the ext languages list.
 
         :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
         try:
@@ -386,7 +386,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise InvalidExtLanguageDataError(data_dict) from e
 
     def _load_script(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:schemas.script.Script. Finally append to the scripts list.
+        """Get dict data and loads to :class:`bcp47py.schemas.script.Script`. Finally append to the scripts list.
 
         :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:"""
         try:
@@ -395,7 +395,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise InvalidScriptDataError(data_dict) from e
 
     def _load_region(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:schemas.region.Region. Finally append to the region list.
+        """Get dict data and loads to :class:`bcp47py.schemas.region.Region`. Finally append to the region list.
 
         :raise exceptions.invalid_data.invalid_region_data_error.InvalidRegionDataError:"""
         try:
@@ -404,7 +404,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise InvalidRegionDataError(data_dict) from e
 
     def _load_variant(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:schemas.variant.Variant. Finally append to the variants list.
+        """Get dict data and loads to :class:`bcp47py.schemas.variant.Variant`. Finally append to the variants list.
 
         :raise exceptions.invalid_data.invalid_variant_data_error.InvalidVariantDataError:"""
         try:
@@ -413,7 +413,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise InvalidVariantDataError(data_dict) from e
 
     def _load_grandfathered(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:schemas.grandfathered.Grandfathered. Finally append to the grandfathered
+        """Get dict data and loads to :class:`bcp47py.schemas.grandfathered.Grandfathered`. Finally append to the grandfathered
         list.
 
         :raise exceptions.invalid_data.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:"""
@@ -423,7 +423,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             raise InvalidGrandfatheredDataError(data_dict) from e
 
     def _load_redundant(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:schemas.redundant.Redundant. Finally append to the redundant list.
+        """Get dict data and loads to :class:`bcp47py.schemas.redundant.Redundant`. Finally append to the redundant list.
 
         :raise exceptions.invalid_data.invalid_redundant_data_error.InvalidRedundantDataError:"""
         try:

@@ -8,10 +8,9 @@
    dataclasses.rst
 
 
-
-
-
-
+.. autosummary::
+   :toctree: _autosummary
+   :recursive:
 
 
 

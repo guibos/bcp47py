@@ -13,10 +13,10 @@ from schemas.script import Script
 
 
 class VariantPreferredValue(PreferredValue):
-    """Class that adds :class:schemas.variant.Variant attribute that could be set as preferred value for a
-    :class:schemas.variant.Variant type.
+    """Class that adds :class:`bcp47py.schemas.variant.Variant` attribute that could be set as preferred value for a
+    :class:`bcp47py.schemas.variant.Variant` type.
 
-    Check :class:schemas.abstract.preferred_value.PreferredValue class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
 
     variant: 'Variant'
 
@@ -25,11 +25,11 @@ class VariantPreferredValue(PreferredValue):
 
 
 class VariantPrefix(ExtLangPrefix):
-    """Class that adds :class:schemas.ext_lang.ExtLang, :class:schemas.script.Script, :class:schemas.region.Region and
-    :class:schemas.variant.Variant attributes, that could be set as preferred value from an
-    :class:schemas.variant.Variant type.
+    """Class that adds :class:`bcp47py.schemas.ext_lang.ExtLang`, :class:`bcp47py.schemas.script.Script`, :class:`bcp47py.schemas.region.Region` and
+    :class:`bcp47py.schemas.variant.Variant` attributes, that could be set as preferred value from an
+    :class:`bcp47py.schemas.variant.Variant` type.
 
-    Check :class:schemas.abstract.prefix.Prefix class for more information about prefix."""
+    Check :class:`bcp47py.schemas.abstract.prefix.Prefix` class for more information about prefix."""
     ext_lang: Optional[ExtLang] = None
     script: Optional[Script] = None
     region: Optional[Region] = None

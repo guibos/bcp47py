@@ -9,10 +9,10 @@ from schemas.mixin.preferred_value_validator import PreferredValueValidator
 
 
 class RegionPreferredValue(PreferredValue):
-    """Class that adds :class:schemas.region.Region that could be set as preferred value for a schemas.region.Region
-    type.
+    """Class that adds :class:`bcp47py.schemas.region.Region` that could be set as preferred value for a
+    :class:`bcp47py.schemas.region.Region` type.
 
-    Check :class:schemas.abstract.preferred_value.PreferredValue class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
     region: 'Region'
 
     def tag(self) -> Annotated[str, TAG_FIELD_INFO]:

@@ -49,7 +49,7 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def languages(self) -> List[Language]:
-        """Return the list of :class:`schemas.language.Language` that are included in BCP47."""
+        """Return the list of :class:`bcp47py.schemas.language.Language` that are included in BCP47."""
 
     def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
         """Return a class:`schemas.language.Language` by his subtag.
@@ -66,7 +66,7 @@ class RepositoryAbstract(abc.ABC):
         """Return the list of LanguagesScopes that are included in BCP47."""
 
     def get_language_scope_by_name(self, name: str) -> LanguageScope:
-        """Return a :class:schemas.language_scope.LanguageScope by his subtag."""
+        """Return a :class:`bcp47py.schemas.language_scope.LanguageScope` by his subtag."""
         try:
             langauge_scope_enum = LanguageScopeEnum(name)
         except ValueError as e:

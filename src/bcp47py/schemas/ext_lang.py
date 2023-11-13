@@ -15,9 +15,9 @@ from schemas.field_info import DEPRECATED_FIELD_INFO, MACRO_LANGUAGE_FIELD_INFO
 
 class ExtLangPreferredValue(PreferredValue):
     """Class that adds schemas.language.Language attribute that could be set as preferred value for an
-    :class:schemas.ext_lang.ExtLang type.
+    :class:`bcp47py.schemas.ext_lang.ExtLang` type.
 
-    Check :class:schemas.abstract.preferred_value.PreferredValue class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
 
     @property
@@ -26,10 +26,10 @@ class ExtLangPreferredValue(PreferredValue):
 
 
 class ExtLangPrefix(Prefix):
-    """Class that adds :class:schemas.language.Language attribute, that could be set as preferred value
-    from an :class:schemas.ext_lang.ExtLang type.
+    """Class that adds :class:`bcp47py.schemas.language.Language` attribute, that could be set as preferred value
+    from an :class:`bcp47py.schemas.ext_lang.ExtLang` type.
 
-    Check :class:schemas.abstract.prefix.Prefix class for more information about prefix."""
+    Check :class:`bcp47py.schemas.abstract.prefix.Prefix` class for more information about prefix."""
     language: Language
 
     @property
@@ -38,9 +38,9 @@ class ExtLangPrefix(Prefix):
 
 
 class ExtLang(Subtag):
-    """Extended language subtags are used to identify certain specially selected :class:schemas.language.Language that,
+    """Extended language subtags are used to identify certain specially selected :class:`bcp47py.schemas.language.Language` that,
     for various historical and compatibility reasons, are closely identified with or tagged using an existing primary
-    :class:schemas.language.Language subtag.
+    :class:`bcp47py.schemas.language.Language` subtag.
 
     For more information: https://www.rfc-editor.org/rfc/bcp/bcp47.txt"""
     preferred_value: ExtLangPreferredValue

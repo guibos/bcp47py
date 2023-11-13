@@ -11,10 +11,10 @@ from schemas.script import Script
 
 
 class RedundantPreferredValue(PreferredValue):
-    """Class that adds :schemas.language.Language: and :class:schemas.script.Script that could be set as
-    preferred value for a :class:schemas.redundant.Redundant type.
+    """Class that adds :class:`bcp47py.schemas.language.Language: and :class:`bcp47py.schemas.script.Script` that could be set as
+    preferred value for a :class:`bcp47py.schemas.redundant.Redundant` type.
 
-    Check :class:schemas.abstract.preferred_value.PreferredValue class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
     script: Optional[Script] = None
 
@@ -23,7 +23,7 @@ class RedundantPreferredValue(PreferredValue):
 
 
 class Redundant(Tag, PreferredValueValidator):
-    """A redundant tag is a :class:schemas.grandfathered.Grandfathered registration whose individual subtags appear
+    """A redundant tag is a :class:`bcp47py.schemas.grandfathered.Grandfathered` registration whose individual subtags appear
     with the same semantic meaning in the registry.
 
     For more information: https://www.rfc-editor.org/rfc/bcp/bcp47.txt"""
