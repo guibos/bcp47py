@@ -7,8 +7,8 @@ from typing import Optional, Dict, Any, Type, List, Union
 
 from pydantic import ValidationError
 
+from abstract.bcp47_repository.in_memory_bcp47_repository_abstract import InMemoryBCP47RepositoryAbstract
 from mixin.base import Base
-from abstract.bcp47_repository.in_memory_bcp47_repository_abstract import BCP47InMemoryRepositoryAbstract
 from exceptions.invalid.invalid_ext_lang_data_error import InvalidExtLanguageDataError
 from exceptions.invalid.invalid_grandfathered_data_error import InvalidGrandfatheredDataError
 from exceptions.invalid.invalid_language_data_error import InvalidLanguageDataError
@@ -52,7 +52,7 @@ class _AddNewDataReturn:
     previous_key: str
 
 
-class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-many-instance-attributes
+class Repository(InMemoryBCP47RepositoryAbstract, Base):
     """Repository that provides all data from the BCP47 specification in several dataclasses."""
     _BCP47_TYPE_PROCESSING_ORDER = [
         BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
@@ -79,8 +79,6 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
         'Prefix': _BCP47ValueType(value_type=list, internal_name='prefix'),
         'Tag': _BCP47ValueType(value_type=str, internal_name='tag'),
     }
-    _languages_scopes = (LanguageScopeEnum.COLLECTION, LanguageScopeEnum.PRIVATE_USE, LanguageScopeEnum.MACRO_LANGUAGE,
-                         LanguageScopeEnum.SPECIAL)
 
     def __init__(self, language_subtag_registry_file_path: Optional[str] = None):
         """Main constructor also call a method that load all the data in this instance.
@@ -130,8 +128,8 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
         self._load_bcp47()
 
     def _load_languages_scopes(self):
-        """Function that create :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.language_scope.LanguageScope` instances for each value of
-        :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorenums.language_scope.LanguageScopeEnum` enum."""
+        """Function that create :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.language_scope.LanguageScope` instances for each value of
+        :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorenums.language_scope.LanguageScopeEnum` enum."""
         for language_scope in LanguageScopeEnum:
             self._languages_scopes.append(LanguageScope(scope=language_scope))
 
@@ -324,7 +322,7 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
             raise UnexpectedBCP47TypeError(bcp47_type)
 
     def _load_language(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.language.Language` dataclass. Finally append to the languages list.
+        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.language.Language` dataclass. Finally append to the languages list.
 
         :raise exceptions.invalid.invalid_language_data_error.InvalidLanguageDataError:"""
         try:
@@ -333,7 +331,7 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
             raise InvalidLanguageDataError(data_dict) from e
 
     def _load_ext_lang(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang`. Finally append to the ext languages list.
+        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang`. Finally append to the ext languages list.
 
         :raise exceptions.invalid.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
         try:
@@ -342,7 +340,7 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
             raise InvalidExtLanguageDataError(data_dict) from e
 
     def _load_script(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.script.Script`. Finally append to the scripts list.
+        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.script.Script`. Finally append to the scripts list.
 
         :raise exceptions.invalid.invalid_script_data_error.InvalidScriptDataError:"""
         try:
@@ -351,7 +349,7 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
             raise InvalidScriptDataError(data_dict) from e
 
     def _load_region(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.region.Region`. Finally append to the region list.
+        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.region.Region`. Finally append to the region list.
 
         :raise exceptions.invalid.invalid_region_data_error.InvalidRegionDataError:"""
         try:
@@ -360,7 +358,7 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
             raise InvalidRegionDataError(data_dict) from e
 
     def _load_variant(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.variant.Variant`. Finally append to the variants list.
+        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.variant.Variant`. Finally append to the variants list.
 
         :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError:"""
         try:
@@ -369,7 +367,7 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
             raise InvalidVariantDataError(data_dict) from e
 
     def _load_grandfathered(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.grandfathered.Grandfathered`. Finally append to the grandfathered
+        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.grandfathered.Grandfathered`. Finally append to the grandfathered
         list.
 
         :raise exceptions.invalid.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:"""
@@ -379,7 +377,7 @@ class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-
             raise InvalidGrandfatheredDataError(data_dict) from e
 
     def _load_redundant(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.redundant.Redundant`. Finally append to the redundant list.
+        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.redundant.Redundant`. Finally append to the redundant list.
 
         :raise exceptions.invalid.invalid_redundant_data_error.InvalidRedundantDataError:"""
         try:

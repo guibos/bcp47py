@@ -15,9 +15,9 @@ from schemas.mixin.subtag import Subtag
 
 class ExtLangPreferredValue(PreferredValue):
     """Class that adds schemas.language.Language attribute that could be set as preferred value for an
-    :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang` type.
+    :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang` type.
 
-    Check :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.interface.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.interface.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
 
     @property
@@ -26,10 +26,10 @@ class ExtLangPreferredValue(PreferredValue):
 
 
 class ExtLangPrefix(Prefix):
-    """Class that adds :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.language.Language` attribute, that could be set as preferred value
-    from an :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang` type.
+    """Class that adds :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.language.Language` attribute, that could be set as preferred value
+    from an :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang` type.
 
-    Check :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.interface.prefix.Prefix` class for more information about prefix."""
+    Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.interface.prefix.Prefix` class for more information about prefix."""
     language: Language
 
     @property
@@ -38,9 +38,9 @@ class ExtLangPrefix(Prefix):
 
 
 class ExtLang(Subtag):
-    """Extended language subtags are used to identify certain specially selected :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.language.Language` that,
+    """Extended language subtags are used to identify certain specially selected :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.language.Language` that,
     for various historical and compatibility reasons, are closely identified with or tagged using an existing primary
-    :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.language.Language` subtag.
+    :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.language.Language` subtag.
 
     For more information: https://www.rfc-editor.org/rfc/bcp/bcp47.txt"""
     preferred_value: ExtLangPreferredValue

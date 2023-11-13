@@ -12,10 +12,10 @@ from schemas.script import Script
 
 
 class VariantPreferredValue(PreferredValue):
-    """Class that adds :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.variant.Variant` attribute that could be set as preferred value for a
-    :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.variant.Variant` type.
+    """Class that adds :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.variant.Variant` attribute that could be set as preferred value for a
+    :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.variant.Variant` type.
 
-    Check :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
 
 
     variant: 'Variant'
@@ -25,11 +25,11 @@ class VariantPreferredValue(PreferredValue):
 
 
 class VariantPrefix(ExtLangPrefix):
-    """Class that adds :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang`, :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.script.Script`, :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.region.Region` and
-    :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.variant.Variant` attributes, that could be set as preferred value from an
-    :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.variant.Variant` type.
+    """Class that adds :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang`, :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.script.Script`, :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.region.Region` and
+    :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.variant.Variant` attributes, that could be set as preferred value from an
+    :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.variant.Variant` type.
 
-    Check :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.abstract.prefix.Prefix` class for more information about prefix."""
+    Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.abstract.prefix.Prefix` class for more information about prefix."""
 
     ext_lang: Optional[ExtLang] = None
     script: Optional[Script] = None

@@ -9,10 +9,10 @@ from schemas.mixin.subtag import Subtag
 
 
 class RegionPreferredValue(PreferredValue):
-    """Class that adds :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.region.Region` that could be set as preferred value for a
-    :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.region.Region` type.
+    """Class that adds :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.region.Region` that could be set as preferred value for a
+    :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.region.Region` type.
 
-    Check :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
     region: 'Region'
 
     def tag(self) -> Annotated[str, TAG_FIELD_INFO]:

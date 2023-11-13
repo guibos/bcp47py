@@ -57,7 +57,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
 
     def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
         try:
-            return self._tag_or_subtag_filter(subtag, self.languages, case_sensitive)
+            return self._subtag_filter(subtag, self.languages, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise LanguageSubtagNotFoundError(subtag) from e
 
@@ -82,7 +82,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
 
     def get_ext_lang_by_subtag(self, subtag: str, case_sensitive: bool = False) -> ExtLang:
         try:
-            return self._tag_or_subtag_filter(subtag, self.ext_langs, case_sensitive)
+            return self._subtag_filter(subtag, self.ext_langs, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise ExtLangSubtagNotFoundError(subtag) from e
 
@@ -92,7 +92,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
 
     def get_script_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Script:
         try:
-            return self._tag_or_subtag_filter(subtag, self.scripts, case_sensitive)
+            return self._subtag_filter(subtag, self.scripts, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise ScriptSubtagNotFoundError(subtag) from e
 
@@ -102,7 +102,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
 
     def get_region_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Region:
         try:
-            return self._tag_or_subtag_filter(subtag, self.regions, case_sensitive)
+            return self._subtag_filter(subtag, self.regions, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise RegionSubtagNotFoundError(subtag) from e
 
@@ -112,7 +112,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
 
     def get_variant_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Variant:
         try:
-            return self._tag_or_subtag_filter(subtag, self.variants, case_sensitive)
+            return self._subtag_filter(subtag, self.variants, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise VariantSubtagNotFoundError(subtag) from e
 
@@ -122,7 +122,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
 
     def get_grandfathered_by_tag(self, tag: str, case_sensitive: bool = False) -> Grandfathered:
         try:
-            return self._tag_or_subtag_filter(tag, self.grandfathered, case_sensitive)
+            return self._subtag_filter(tag, self.grandfathered, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise GrandfatheredTagNotFoundError(tag) from e
 
@@ -132,15 +132,17 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
 
     def get_redundant_by_tag(self, tag: str, case_sensitive: bool = False) -> Redundant:
         try:
-            return self._tag_or_subtag_filter(tag, self.redundant, case_sensitive)
+            return self._subtag_filter(tag, self.redundant, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise RedundantTagNotFoundError(tag) from e
 
     def tag_parser(self, tag: str, case_sensitive: bool = False) -> Subtags:
+        """Method that parse a bcp47 string tag and return a dataclass with all subtags information."""
         return Subtags(**self._tag_parser(tag, case_sensitive))
 
-    def _tag_or_subtag_filter(self, subtag_str: str, tag_or_subtag_list: List[TagsOrSubtagType],
-                              case_sensitive: bool) -> TagsOrSubtagType:
+    def _subtag_filter(self, subtag_str: str, tag_or_subtag_list: List[TagsOrSubtagType],
+                       case_sensitive: bool) -> TagsOrSubtagType:
+        """Method that for """
         if not case_sensitive:
             subtag_str = subtag_str.lower()
         for subtag in tag_or_subtag_list:
@@ -164,7 +166,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
                     raise TagOrSubtagNotFoundError(f"Subtag {subtag} of {tag} is not found.")
                 try:
                     tag_or_subtag_data[
-                        self._SUBTAG_DATA_FINDER[i].data_dict_key.value] = self._SUBTAG_DATA_FINDER[i].callable(
+                        self._SUBTAG_DATA_FINDER[i].bcp47_subtag_type.value] = self._SUBTAG_DATA_FINDER[i].callable(
                             subtag, case_sensitive)
                     break
                 except TagOrSubtagNotFoundError:
@@ -187,5 +189,8 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
 
 @dataclasses.dataclass
 class _SubtagDataFinder:
+    """Dataclass that have the relationship between bcp47 subtag type and the method that should be called to search
+    the subtag. _SUBTAG_DATA_FINDER constant is a list that contains instances of this class that are used search in
+    a specific order to parse a bcp47 tag."""
     callable: Callable[[str, bool], Any]
-    data_dict_key: BCP47Type
+    bcp47_subtag_type: BCP47Type

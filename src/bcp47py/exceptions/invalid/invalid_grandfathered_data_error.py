@@ -1,6 +1,6 @@
 """InvalidGrandfatheredDataError class module."""
 from enums.bcp47_type import BCP47Type
-from exceptions.invalid.base.invalid_data_error import InvalidDataError
+from exceptions.invalid.mixin.invalid_data_error import InvalidDataError
 
 
 class InvalidGrandfatheredDataError(InvalidDataError):
