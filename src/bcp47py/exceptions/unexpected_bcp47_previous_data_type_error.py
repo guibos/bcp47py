@@ -1,7 +1,7 @@
 from typing import Type
 
 
-class UnexpectedPreviousDataTypeError(Exception):
+class UnexpectedBCP47PreviousDataTypeError(Exception):
     """Exception that should be raised when previous data type that are not managed to be appended"""
     _MESSAGE_TEMPLATE = '"Unexpected previous data type that are not managed to be appended": "{}".'
 

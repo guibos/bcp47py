@@ -6,7 +6,7 @@ from _pytest.fixtures import fixture
 from _pytest.tmpdir import TempPathFactory
 
 from downloader_service import DownloaderService
-from mixin.base import Base
+from abstract.base import Base
 
 
 @fixture(scope='session')

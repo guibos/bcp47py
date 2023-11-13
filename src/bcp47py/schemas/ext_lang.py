@@ -8,16 +8,16 @@ from pydantic_core.core_schema import ValidationInfo
 
 from schemas.abstract.preferred_value import PreferredValue
 from schemas.abstract.prefix import Prefix
-from schemas.mixin.subtag import Subtag
-from schemas.language import Language
 from schemas.field_info import DEPRECATED_FIELD_INFO, MACRO_LANGUAGE_FIELD_INFO
+from schemas.language import Language
+from schemas.mixin.subtag import Subtag
 
 
 class ExtLangPreferredValue(PreferredValue):
     """Class that adds schemas.language.Language attribute that could be set as preferred value for an
     :class:`bcp47py.schemas.ext_lang.ExtLang` type.
 
-    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.interface.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
 
     @property
@@ -29,7 +29,7 @@ class ExtLangPrefix(Prefix):
     """Class that adds :class:`bcp47py.schemas.language.Language` attribute, that could be set as preferred value
     from an :class:`bcp47py.schemas.ext_lang.ExtLang` type.
 
-    Check :class:`bcp47py.schemas.abstract.prefix.Prefix` class for more information about prefix."""
+    Check :class:`bcp47py.schemas.interface.prefix.Prefix` class for more information about prefix."""
     language: Language
 
     @property

@@ -10,5 +10,3 @@ class InvalidRedundantDataError(InvalidDataError):
 
     def _bcp47_type(self) -> BCP47Type:
         return self._BCP47_TYPE
-
-

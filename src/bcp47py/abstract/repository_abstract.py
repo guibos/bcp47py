@@ -1,5 +1,5 @@
-import abc
 import dataclasses
+from abc import ABC
 from typing import List, Dict, Union, Callable, Any
 
 from enums.bcp47_type import BCP47Type
@@ -13,6 +13,7 @@ from exceptions.not_found.region_subtag_not_found_error import RegionSubtagNotFo
 from exceptions.not_found.script_subtag_not_found_error import ScriptSubtagNotFoundError
 from exceptions.not_found.tag_or_subtag_not_found_error import TagOrSubtagNotFoundError
 from exceptions.not_found.variant_subtag_not_found_error import VariantSubtagNotFoundError
+from interface.repository_interface import RepositoryInterface
 from schemas.ext_lang import ExtLang
 from schemas.grandfathered import Grandfathered
 from schemas.language import Language
@@ -25,48 +26,41 @@ from schemas.variant import Variant
 from type_aliases import TagsOrSubtagType
 
 
-@dataclasses.dataclass
-class SubtagDataFinder:
-    callable: Callable[[str, bool], Any]
-    data_dict_key: BCP47Type
-
-
-class RepositoryAbstract(abc.ABC):
+class RepositoryAbstract(RepositoryInterface):
 
     def __init__(self):
+        self._languages: List[Language] = []
+        self._languages_scopes: List[LanguageScope] = []
+        self._ext_langs: List[ExtLang] = []
+        self._scripts: List[Script] = []
+        self._regions: List[Region] = []
+        self._variants: List[Variant] = []
+        self._grandfathered: List[Grandfathered] = []
+        self._redundant: List[Redundant] = []
+
         self._SUBTAG_DATA_FINDER = [
-            SubtagDataFinder(self.get_language_by_subtag, BCP47Type.LANGUAGE),
-            SubtagDataFinder(self.get_ext_lang_by_subtag, BCP47Type.EXTLANG),
-            SubtagDataFinder(self.get_script_by_subtag, BCP47Type.SCRIPT),
-            SubtagDataFinder(self.get_region_by_subtag, BCP47Type.REGION),
-            SubtagDataFinder(self.get_variant_by_subtag, BCP47Type.VARIANT)
+            _SubtagDataFinder(self.get_language_by_subtag, BCP47Type.LANGUAGE),
+            _SubtagDataFinder(self.get_ext_lang_by_subtag, BCP47Type.EXTLANG),
+            _SubtagDataFinder(self.get_script_by_subtag, BCP47Type.SCRIPT),
+            _SubtagDataFinder(self.get_region_by_subtag, BCP47Type.REGION),
+            _SubtagDataFinder(self.get_variant_by_subtag, BCP47Type.VARIANT)
         ]
 
-    def tag_parser(self, tag: str, case_sensitive: bool = False) -> Subtags:
-        """Parse string tag to get all subtags."""
-        return Subtags(**self._tag_parser(tag, case_sensitive))
-
     @property
-    @abc.abstractmethod
     def languages(self) -> List[Language]:
-        """Return the list of :class:`bcp47py.schemas.language.Language` that are included in BCP47."""
+        return self._languages
 
     def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
-        """Return a class:`schemas.language.Language` by his subtag.
-
-        :raise exceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError:"""
         try:
             return self._tag_or_subtag_filter(subtag, self.languages, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise LanguageSubtagNotFoundError(subtag) from e
 
     @property
-    @abc.abstractmethod
     def languages_scopes(self) -> List[LanguageScope]:
-        """Return the list of LanguagesScopes that are included in BCP47."""
+        return self._languages_scopes
 
     def get_language_scope_by_name(self, name: str) -> LanguageScope:
-        """Return a :class:`bcp47py.schemas.language_scope.LanguageScope` by his subtag."""
         try:
             langauge_scope_enum = LanguageScopeEnum(name)
         except ValueError as e:
@@ -78,80 +72,67 @@ class RepositoryAbstract(abc.ABC):
         raise RuntimeError(f'Unexpected workflow error to find a language scope: "{name}"')
 
     @property
-    @abc.abstractmethod
     def ext_langs(self) -> List[ExtLang]:
-        """Return the list of ExtLangs that are included in BCP47."""
-        pass
+        return self._ext_langs
 
     def get_ext_lang_by_subtag(self, subtag: str, case_sensitive: bool = False) -> ExtLang:
-        """Return a ExtLang by his subtag."""
         try:
             return self._tag_or_subtag_filter(subtag, self.ext_langs, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise ExtLangSubtagNotFoundError(subtag) from e
 
     @property
-    @abc.abstractmethod
     def scripts(self) -> List[Script]:
-        """Return the list of Scripts that are included in BCP47."""
-        pass
+        return self._scripts
 
     def get_script_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Script:
-        """Return a Script by his subtag.
-        :raise exceptions.not_found.script_subtag_not_found_error.ScriptSubtagNotFoundError:"""
         try:
             return self._tag_or_subtag_filter(subtag, self.scripts, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise ScriptSubtagNotFoundError(subtag) from e
 
     @property
-    @abc.abstractmethod
     def regions(self) -> List[Region]:
-        """Return the list of Scripts that are included in BCP47."""
+        return self._regions
 
     def get_region_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Region:
-        """Return a Region by his subtag."""
         try:
             return self._tag_or_subtag_filter(subtag, self.regions, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise RegionSubtagNotFoundError(subtag) from e
 
     @property
-    @abc.abstractmethod
     def variants(self) -> List[Variant]:
-        """Return the list of Variants that are included in BCP47."""
+        return self._variants
 
     def get_variant_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Variant:
-        """Return a Variant by his subtag."""
         try:
             return self._tag_or_subtag_filter(subtag, self.variants, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise VariantSubtagNotFoundError(subtag) from e
 
     @property
-    @abc.abstractmethod
     def grandfathered(self) -> List[Grandfathered]:
-        """Return the list of Grandfathered that are included in BCP47."""
+        return self._grandfathered
 
     def get_grandfathered_by_tag(self, tag: str, case_sensitive: bool = False) -> Grandfathered:
-        """Return a Variant by his tag."""
         try:
             return self._tag_or_subtag_filter(tag, self.grandfathered, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise GrandfatheredTagNotFoundError(tag) from e
 
     @property
-    @abc.abstractmethod
     def redundant(self) -> List[Redundant]:
-        """Return the list of Redundant that are included in BCP47."""
-        pass
+        return self._redundant
 
     def get_redundant_by_tag(self, tag: str, case_sensitive: bool = False) -> Redundant:
-        """Return a Redundant by his tag."""
         try:
             return self._tag_or_subtag_filter(tag, self.redundant, case_sensitive)
         except TagOrSubtagNotFoundError as e:
             raise RedundantTagNotFoundError(tag) from e
+
+    def tag_parser(self, tag: str, case_sensitive: bool = False) -> Subtags:
+        return Subtags(**self._tag_parser(tag, case_sensitive))
 
     def _tag_or_subtag_filter(self, subtag_str: str, tag_or_subtag_list: List[TagsOrSubtagType],
                               case_sensitive: bool) -> TagsOrSubtagType:
@@ -193,3 +174,9 @@ class RepositoryAbstract(abc.ABC):
         elif str_tag_or_subtag := getattr(model, 'tag', ''):
             return str_tag_or_subtag
         raise RuntimeError("Tag or subtag not found.")
+
+
+@dataclasses.dataclass
+class _SubtagDataFinder:
+    callable: Callable[[str, bool], Any]
+    data_dict_key: BCP47Type

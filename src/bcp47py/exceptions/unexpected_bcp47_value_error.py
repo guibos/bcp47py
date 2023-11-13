@@ -1,6 +1,3 @@
-from enum import Enum
-
-
 class UnexpectedBCP47ValueError(Exception):
     """Exception that should be raised when a bcp47 key is unexpected and is not possible to parse."""
     _MESSAGE_TEMPLATE = 'Unexpected BCP47 value: "{}" for key: "{}".'

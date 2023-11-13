@@ -1,4 +1,4 @@
-"""Module that contains Tag mixin class."""
+"""Module that contains Tag abstract class."""
 from typing import Annotated
 
 from pydantic import Field

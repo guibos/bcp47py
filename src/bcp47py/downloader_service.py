@@ -1,7 +1,7 @@
 """Utility module that update language subtag registry."""
 from urllib.request import urlopen
 
-from mixin.base import Base
+from abstract.base import Base
 
 
 class DownloaderService(Base):  # pylint: disable=too-few-public-methods

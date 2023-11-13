@@ -1,5 +1,3 @@
-from typing import Type
-
 from enums.bcp47_type import BCP47Type
 
 

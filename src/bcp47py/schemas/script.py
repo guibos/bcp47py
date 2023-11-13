@@ -10,4 +10,4 @@ class Script(Subtag):
     of a language or its dialects.
 
     For more information: https://www.rfc-editor.org/rfc/bcp/bcp47.txt"""
-    comments: Annotated[List[str], COMMENTS_FIELD_INFO] =[]
+    comments: Annotated[List[str], COMMENTS_FIELD_INFO] = []

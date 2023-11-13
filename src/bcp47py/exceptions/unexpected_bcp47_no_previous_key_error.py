@@ -1,4 +1,4 @@
-class NoPreviousKeyError(Exception):
+class UnexpectedBCP47NoPreviousKeyError(Exception):
     _MESSAGE_TEMPLATE = "There was no previous key to which it should be concatenated"
 
     def __init__(self):

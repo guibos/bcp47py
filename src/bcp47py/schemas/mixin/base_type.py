@@ -1,4 +1,4 @@
-"""Module that contains BaseType mixin."""
+"""Module that contains BaseType abstract."""
 
 from datetime import datetime
 from typing import List, Annotated

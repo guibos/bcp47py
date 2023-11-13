@@ -4,9 +4,9 @@ from typing import Optional, Annotated
 
 from schemas.abstract.preferred_value import PreferredValue
 from schemas.field_info import TAG_FIELD_INFO
-from schemas.mixin.tag import Tag
-from schemas.mixin.preferred_value_validator import PreferredValueValidator
 from schemas.language import Language
+from schemas.mixin.preferred_value_validator import PreferredValueValidator
+from schemas.mixin.tag import Tag
 from schemas.script import Script
 
 
@@ -14,7 +14,7 @@ class RedundantPreferredValue(PreferredValue):
     """Class that adds :class:`bcp47py.schemas.language.Language: and :class:`bcp47py.schemas.script.Script` that could be set as
     preferred value for a :class:`bcp47py.schemas.redundant.Redundant` type.
 
-    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.interface.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
     script: Optional[Script] = None
 

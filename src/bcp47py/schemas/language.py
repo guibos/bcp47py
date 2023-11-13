@@ -4,9 +4,9 @@ from typing import Optional, Annotated, List
 
 from schemas.abstract.preferred_value import PreferredValue
 from schemas.field_info import MACRO_LANGUAGE_FIELD_INFO, DEPRECATED_FIELD_INFO, TAG_FIELD_INFO, COMMENTS_FIELD_INFO
-from schemas.mixin.subtag import Subtag
-from schemas.mixin.preferred_value_validator import PreferredValueValidator
 from schemas.language_scope import LanguageScope
+from schemas.mixin.preferred_value_validator import PreferredValueValidator
+from schemas.mixin.subtag import Subtag
 from schemas.script import Script
 
 
@@ -14,7 +14,7 @@ class LanguagePreferredValue(PreferredValue):
     """Class that adds :class:`bcp47py.schemas.language.Language` attribute that could be set as preferred value for a
     :class:`bcp47py.schemas.language.Language` type.
 
-    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.interface.preferred_value.PreferredValue` class for more information about preferred value."""
     language: 'Language'
 
     def tag(self) -> Annotated[str, TAG_FIELD_INFO]:

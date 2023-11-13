@@ -32,10 +32,5 @@ COMMENTS_FIELD_INFO = Field(
     stability is provided.
     
     For more information https://www.rfc-editor.org/rfc/bcp/bcp47.txt""",
-    examples=[
-        ["sr, hr, bs are preferred for most modern uses"],
-        ["Non real example.", "Another non real example."]
-    ]
-
-)
+    examples=[["sr, hr, bs are preferred for most modern uses"], ["Non real example.", "Another non real example."]])
 TAG_FIELD_INFO = Field(examples=['en-GB-oxendict', 'jbo'])
