@@ -452,35 +452,18 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             data_dict['scope'] = self.get_language_scope_by_name(langauge_scope)
 
         if prefix_s := data_dict.pop('prefix', None):
-            data_dict['prefix'] = self._parse_prefix(prefix_s, case_sensitive=True)
+            data_dict['prefix'] = self._parse_prefix(prefix_s)
 
-        return data_dict
-
-    def _parse_to_object_preferred_value(self, bcp47_type: BCP47Type, data_dict: Dict[str, Any],
-                                         preferred_value: str) -> Dict[str, Any]:
-        if bcp47_type == BCP47Type.LANGUAGE:
-            data_dict['preferred_value'] = self.get_language_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.EXTLANG:
-            data_dict['preferred_value'] = self.get_ext_lang_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.SCRIPT:
-            data_dict['preferred_value'] = self.get_script_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.REGION:
-            data_dict['preferred_value'] = self.get_region_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.VARIANT:
-            data_dict['preferred_value'] = self.get_variant_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.GRANDFATHERED:
-            data_dict['preferred_value'] = self.get_grandfathered_by_tag(preferred_value)
-        elif bcp47_type == BCP47Type.REDUNDANT:
-            data_dict['preferred_value'] = self.get_redundant_by_tag(preferred_value)
-        else:
-            raise RuntimeError(f"Unexpected workflow bcp_type unknown: {bcp47_type}")
         return data_dict
 
     def _parse_prefix(
-            self, prefix_list: List[str],
-            case_sensitive: bool) -> List[Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
+            self, prefix_list: List[str]) -> List[Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
+        """Parse a list of string subtags to a dict of name of va
+        :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:
+        """
+
         prefix_f = []
 
         for prefix in prefix_list:
-            prefix_f.append(self._tag_parser(prefix, case_sensitive))
+            prefix_f.append(self._tag_parser(prefix, True))
         return prefix_f
