@@ -54,7 +54,7 @@ class RepositoryAbstract(abc.ABC):
     def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
         """Return a class:`schemas.language.Language` by his subtag.
 
-        :raise exceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError:"""
+        :raises `bcp47py.exceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError`:"""
         try:
             return self._tag_or_subtag_filter(subtag, self.languages, case_sensitive)
         except TagOrSubtagNotFoundError as e:
@@ -63,10 +63,12 @@ class RepositoryAbstract(abc.ABC):
     @property
     @abc.abstractmethod
     def languages_scopes(self) -> List[LanguageScope]:
-        """Return the list of LanguagesScopes that are included in BCP47."""
+        """Return the list of :class:`bcp47py.schemas.language_scope.LanguageScope` that are included in BCP47."""
 
     def get_language_scope_by_name(self, name: str) -> LanguageScope:
-        """Return a :class:`bcp47py.schemas.language_scope.LanguageScope` by his subtag."""
+        """Return a :class:`bcp47py.schemas.language_scope.LanguageScope` by his subtag.
+
+        :raises `bcp47py.exceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError`:"""
         try:
             langauge_scope_enum = LanguageScopeEnum(name)
         except ValueError as e:
