@@ -1,7 +1,8 @@
 import pytest
 
-from interface.repository_interface import RepositoryInterface
+
 from enums.language_scope import LanguageScopeEnum
+from interface.repository_interface import RepositoryInterface
 from repository import Repository
 from schemas.ext_lang import ExtLang
 from schemas.grandfathered import Grandfathered
@@ -49,6 +50,7 @@ def test_bcp47_data_language_scope(repository: RepositoryInterface):
 
 
 def test_bcp47_data_ext_lang(repository: RepositoryInterface):
+
     assert repository.ext_langs
 
     for ext_lang in repository.ext_langs:
@@ -66,6 +68,7 @@ def test_bcp47_data_region(repository: RepositoryInterface):
 
     spain = repository.get_region_by_subtag('es')
     assert spain.description == ['Spain']
+
 
 
 def test_bcp47_data_variant(repository: RepositoryInterface):
@@ -86,6 +89,7 @@ def test_bcp47_data_grandfathered(repository: RepositoryInterface):
 
     gaulish = repository.get_grandfathered_by_tag('cel-gaulish')
     assert gaulish.description == ['Gaulish']
+
 
 
 def test_bcp47_data_redundant(repository: RepositoryInterface):

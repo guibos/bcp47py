@@ -1,5 +1,5 @@
 class UnexpectedBCP47ValueError(Exception):
-    """Exception that should be raised when a bcp47 key is unexpected and is not possible to parse."""
+    """Exception that should be raised when a bcp47 key is unexpected_bcp47 and is not possible to parse."""
     _MESSAGE_TEMPLATE = 'Unexpected BCP47 value: "{}" for key: "{}".'
 
     def __init__(self, unexpected_value: str, internal_name: str):

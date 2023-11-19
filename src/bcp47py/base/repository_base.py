@@ -26,8 +26,7 @@ from schemas.variant import Variant
 from type_aliases import TagsOrSubtagType
 
 
-class RepositoryAbstract(RepositoryInterface):
-
+class RepositoryBase(RepositoryInterface):
     def __init__(self):
         self._languages: List[Language] = []
         self._languages_scopes: List[LanguageScope] = []

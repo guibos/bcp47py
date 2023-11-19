@@ -7,29 +7,27 @@ from typing import Optional, Dict, Any, Type, List, Union
 
 from pydantic import ValidationError
 
-from abstract.base import Base
-from abstract.repository_abstract import RepositoryAbstract
+from base.base import Base
+from base.repository_base import RepositoryBase
+from exceptions.invalid.invalid_ext_lang_data_error import InvalidExtLanguageDataError
+from exceptions.invalid.invalid_grandfathered_data_error import InvalidGrandfatheredDataError
+from exceptions.invalid.invalid_language_data_error import InvalidLanguageDataError
+from exceptions.invalid.invalid_redundant_data_error import InvalidRedundantDataError
+from exceptions.invalid.invalid_region_data_error import InvalidRegionDataError
+from exceptions.invalid.invalid_registry_file_date_error import InvalidRegistryFileDate
+from exceptions.invalid.invalid_script_data_error import InvalidScriptDataError
+from exceptions.invalid.invalid_variant_data_error import InvalidVariantDataError
+from exceptions.unexpected_bcp47.unexpected_bcp47_duplicated_key import UnexpectedBCP47DuplicatedKeyError
+from exceptions.unexpected_bcp47.unexpected_bcp47_key_error import UnexpectedBCP47KeyError
+from exceptions.unexpected_bcp47.unexpected_bcp47_key_type_error import UnexpectedBCP47KeyTypeError
+from exceptions.unexpected_bcp47.unexpected_bcp47_missing_file_date_error import UnexpectedBCP47MissingFileDateError
 from enums.bcp47_type import BCP47Type
 from enums.language_scope import LanguageScopeEnum
-from exceptions.file_date_not_found_in_language_subtag_registry_error import \
-    FileDateNotFoundInLanguageSubtagRegistryError
-from exceptions.invalid_data.invalid_ext_lang_data_error import InvalidExtLanguageDataError
-from exceptions.invalid_data.invalid_grandfathered_data_error import InvalidGrandfatheredDataError
-from exceptions.invalid_data.invalid_language_data_error import InvalidLanguageDataError
-from exceptions.invalid_data.invalid_redundant_data_error import InvalidRedundantDataError
-from exceptions.invalid_data.invalid_region_data_error import InvalidRegionDataError
-from exceptions.invalid_data.invalid_registry_file_date_error import \
-    InvalidRegistryFileDate
-from exceptions.invalid_data.invalid_script_data_error import InvalidScriptDataError
-from exceptions.invalid_data.invalid_variant_data_error import InvalidVariantDataError
-from exceptions.missing_bcp_type_error import MissingBCPTypeError
-from exceptions.unexpected_bcp47_no_previous_key_error import UnexpectedBCP47NoPreviousKeyError
-from exceptions.unexpected_bcp47_duplicated_key import UnexpectedBCP47DuplicatedKeyError
-from exceptions.unexpected_bcp47_key_error import UnexpectedBCP47KeyError
-from exceptions.unexpected_bcp47_key_type_error import UnexpectedBCP47KeyTypeError
-from exceptions.unexpected_bcp47_type_error import UnexpectedBCP47TypeError
-from exceptions.unexpected_bcp47_value_error import UnexpectedBCP47ValueError
-from exceptions.unexpected_bcp47_previous_data_type_error import UnexpectedBCP47PreviousDataTypeError
+from exceptions.unexpected_bcp47.unexpected_bcp47_missing_type_error import UnexpectedBCP47MissingTypeError
+from exceptions.unexpected_bcp47.unexpected_bcp47_no_previous_key_error import UnexpectedBCP47NoPreviousKeyError
+from exceptions.unexpected_bcp47.unexpected_bcp47_previous_data_type_error import UnexpectedBCP47PreviousDataTypeError
+from exceptions.unexpected_bcp47.unexpected_bcp47_type_error import UnexpectedBCP47TypeError
+from exceptions.unexpected_bcp47.unexpected_bcp47_value_error import UnexpectedBCP47ValueError
 from schemas.ext_lang import ExtLang
 from schemas.grandfathered import Grandfathered
 from schemas.language import Language
@@ -54,7 +52,7 @@ class _AddNewDataReturn:
     previous_key: str
 
 
-class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance-attributes
+class Repository(RepositoryBase, Base):  # pylint: disable=too-many-instance-attributes
     """Repository that provides all data from the BCP47 specification in several dataclasses."""
     _BCP47_TYPE_PROCESSING_ORDER = [
         BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
@@ -87,23 +85,23 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def __init__(self, language_subtag_registry_file_path: Optional[str] = None):
         """Main constructor also call a method that load all the data in this instance.
 
-        :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise exceptions.invalid_data.invalid_registry_file_date_error.InvalidRegistryFileDate:
+        :raise exceptions.unexpected_bcp47_missing_file_date_error.UnexpectedBCP47MissingFileDateError:
+        :raise exceptions.invalid.invalid_registry_file_date_error.InvalidRegistryFileDate:
         :raise exceptions.unexpected_bcp47_no_previous_key_error.UnexpectedBCP47NoPreviousKeyError:
-        :raise exceptions.unexpected_previous_data_type_error.UnexpectedBCP47PreviousDataTypeError:
+        :raise exceptions.unexpected_bcp47_previous_data_type_error.UnexpectedBCP47PreviousDataTypeError:
         :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
         :raise exceptions.unexpected_bcp47_duplicated_key.UnexpectedBCP47DuplicatedKeyError:
         :raise exceptions.unexpected_bcp47_value_error.UnexpectedBCP47ValueError:
         :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
-        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:
-        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:
-        :raise exceptions.invalid_data.invalid_region_data_error.InvalidRegionDataError:
-        :raise exceptions.invalid_data.invalid_variant_data_error.InvalidVariantDataError
-        :raise exceptions.invalid_data.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
-        :raise exceptions.invalid_data.invalid_redundant_data_error.InvalidRedundantDataError:"""
+        :raise exceptions.invalid.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid.invalid_script_data_error.InvalidScriptDataError:
+        :raise exceptions.invalid.invalid_region_data_error.InvalidRegionDataError:
+        :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError
+        :raise exceptions.invalid.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
+        :raise exceptions.invalid.invalid_redundant_data_error.InvalidRedundantDataError:"""
         super().__init__()
         self._language_subtag_registry_file_path = (language_subtag_registry_file_path
                                                     or self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH)
@@ -113,23 +111,23 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_data(self):
         """Main function that is responsible to load all data in the instance.
 
-        :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise exceptions.invalid_data.invalid_registry_file_date_error.InvalidRegistryFileDate:
+        :raise exceptions.unexpected_bcp47_missing_file_date_error.UnexpectedBCP47MissingFileDateError:
+        :raise exceptions.invalid.invalid_registry_file_date_error.InvalidRegistryFileDate:
         :raise exceptions.unexpected_bcp47_no_previous_key_error.UnexpectedBCP47NoPreviousKeyError:
-        :raise exceptions.unexpected_previous_data_type_error.UnexpectedBCP47PreviousDataTypeError:
+        :raise exceptions.unexpected_bcp47_previous_data_type_error.UnexpectedBCP47PreviousDataTypeError:
         :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
         :raise exceptions.unexpected_bcp47_duplicated_key.UnexpectedBCP47DuplicatedKeyError:
         :raise exceptions.unexpected_bcp47_value_error.UnexpectedBCP47ValueError:
         :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
-        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:
-        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:
-        :raise exceptions.invalid_data.invalid_region_data_error.InvalidRegionDataError:
-        :raise exceptions.invalid_data.invalid_variant_data_error.InvalidVariantDataError
-        :raise exceptions.invalid_data.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
-        :raise exceptions.invalid_data.invalid_redundant_data_error.InvalidRedundantDataError:"""
+        :raise exceptions.invalid.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid.invalid_script_data_error.InvalidScriptDataError:
+        :raise exceptions.invalid.invalid_region_data_error.InvalidRegionDataError:
+        :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError
+        :raise exceptions.invalid.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
+        :raise exceptions.invalid.invalid_redundant_data_error.InvalidRedundantDataError:"""
         self._load_languages_scopes()
         self._load_bcp47()
 
@@ -143,23 +141,23 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         """Main function that is responsible to parse a "language subtag registry" file and load data into the
         instance.
 
-        :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise exceptions.invalid_data.invalid_registry_file_date_error.InvalidRegistryFileDate:
+        :raise exceptions.unexpected_bcp47_missing_file_date_error.UnexpectedBCP47MissingFileDateError:
+        :raise exceptions.invalid.invalid_registry_file_date_error.InvalidRegistryFileDate:
         :raise exceptions.unexpected_bcp47_no_previous_key_error.UnexpectedBCP47NoPreviousKeyError:
-        :raise exceptions.unexpected_previous_data_type_error.UnexpectedBCP47PreviousDataTypeError:
+        :raise exceptions.unexpected_bcp47_previous_data_type_error.UnexpectedBCP47PreviousDataTypeError:
         :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
         :raise exceptions.unexpected_bcp47_duplicated_key.UnexpectedBCP47DuplicatedKeyError:
         :raise exceptions.unexpected_bcp47_value_error.UnexpectedBCP47ValueError:
         :raise exceptions.unexpected_bcp47_key_type_error.UnexpectedBCP47KeyTypeError:
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
-        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:
-        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:
-        :raise exceptions.invalid_data.invalid_region_data_error.InvalidRegionDataError:
-        :raise exceptions.invalid_data.invalid_variant_data_error.InvalidVariantDataError
-        :raise exceptions.invalid_data.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
-        :raise exceptions.invalid_data.invalid_redundant_data_error.InvalidRedundantDataError:"""
+        :raise exceptions.invalid.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid.invalid_script_data_error.InvalidScriptDataError:
+        :raise exceptions.invalid.invalid_region_data_error.InvalidRegionDataError:
+        :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError
+        :raise exceptions.invalid.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
+        :raise exceptions.invalid.invalid_redundant_data_error.InvalidRedundantDataError:"""
         with open(self._language_subtag_registry_file_path, 'r', encoding=self._LANGUAGE_SUBTAG_REGISTRY_ENCODING) as f:
             items = f.read().split(self._ITEM_SEPARATOR)
 
@@ -203,10 +201,10 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _get_file_date(self, text: str) -> datetime:
         """Return the 'File-Date' that is the version date from the "Language Subtag registry".
 
-        :raise exceptions.file_date_not_found_in_language_subtag_registry_error.FileDateNotFoundInLanguageSubtagRegistryError:
-        :raise exceptions.invalid_data.invalid_registry_file_date_error.InvalidRegistryFileDate:"""
+        :raise exceptions.unexpected_bcp47_missing_file_date_error.UnexpectedBCP47MissingFileDateError:
+        :raise exceptions.invalid.invalid_registry_file_date_error.InvalidRegistryFileDate:"""
         if not text.startswith(self._FILE_HEADER):
-            raise FileDateNotFoundInLanguageSubtagRegistryError()
+            raise UnexpectedBCP47MissingFileDateError()
         try:
             return datetime.fromisoformat(text[11:-1])
         except ValueError as e:
@@ -243,7 +241,8 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         value of previous key.
 
         :raise exceptions.unexpected_bcp47_no_previous_key_error.UnexpectedBCP47NoPreviousKeyError:
-        :raise exceptions.unexpected_previous_data_type_error.UnexpectedBCP47PreviousDataTypeError:"""
+
+        :raise exceptions.unexpected_bcp47_previous_data_type_error.UnexpectedBCP47PreviousDataTypeError:"""
         if not previous_key:
             raise UnexpectedBCP47NoPreviousKeyError()
         previous_data_type = type(data[previous_key])
@@ -295,17 +294,17 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
 
         :raise exceptions.missing_bcp_type_error.MissingBCPTypeError:
         :raise exceptions.unexpected_bcp47_type_error.UnexpectedBCP47TypeError:
-        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:
-        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:
-        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:
-        :raise exceptions.invalid_data.invalid_region_data_error.InvalidRegionDataError:
-        :raise exceptions.invalid_data.invalid_variant_data_error.InvalidVariantDataError
-        :raise exceptions.invalid_data.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
-        :raise exceptions.invalid_data.invalid_redundant_data_error.InvalidRedundantDataError:"""
+        :raise exceptions.invalid.invalid_language_data_error.InvalidLanguageDataError:
+        :raise exceptions.invalid.invalid_ext_lang_error.InvalidExtLanguageDataError:
+        :raise exceptions.invalid.invalid_script_data_error.InvalidScriptDataError:
+        :raise exceptions.invalid.invalid_region_data_error.InvalidRegionDataError:
+        :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError
+        :raise exceptions.invalid.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
+        :raise exceptions.invalid.invalid_redundant_data_error.InvalidRedundantDataError:"""
         try:
             bcp47_type: BCP47Type = data_dict.pop('bcp_type')
         except KeyError:
-            raise MissingBCPTypeError() from KeyError
+            raise UnexpectedBCP47MissingTypeError() from KeyError
 
         data_dict = self._replace_to_object(data_dict)
 
@@ -329,7 +328,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_language(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:`bcp47py.schemas.language.Language` dataclass. Finally append to the languages list.
 
-        :raise exceptions.invalid_data.invalid_language_data_error.InvalidLanguageDataError:"""
+        :raise exceptions.invalid.invalid_language_data_error.InvalidLanguageDataError:"""
         try:
             self._languages.append(Language(**data_dict))
         except ValidationError as e:
@@ -338,7 +337,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_ext_lang(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:`bcp47py.schemas.ext_lang.ExtLang`. Finally append to the ext languages list.
 
-        :raise exceptions.invalid_data.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
+        :raise exceptions.invalid.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
         try:
             self._ext_langs.append(ExtLang(**data_dict))
         except ValidationError as e:
@@ -347,7 +346,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_script(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:`bcp47py.schemas.script.Script`. Finally append to the scripts list.
 
-        :raise exceptions.invalid_data.invalid_script_data_error.InvalidScriptDataError:"""
+        :raise exceptions.invalid.invalid_script_data_error.InvalidScriptDataError:"""
         try:
             self._scripts.append(Script(**data_dict))
         except ValidationError as e:
@@ -356,7 +355,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_region(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:`bcp47py.schemas.region.Region`. Finally append to the region list.
 
-        :raise exceptions.invalid_data.invalid_region_data_error.InvalidRegionDataError:"""
+        :raise exceptions.invalid.invalid_region_data_error.InvalidRegionDataError:"""
         try:
             self._regions.append(Region(**data_dict))
         except ValidationError as e:
@@ -365,7 +364,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_variant(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:`bcp47py.schemas.variant.Variant`. Finally append to the variants list.
 
-        :raise exceptions.invalid_data.invalid_variant_data_error.InvalidVariantDataError:"""
+        :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError:"""
         try:
             self._variants.append(Variant(**data_dict))
         except ValidationError as e:
@@ -375,7 +374,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         """Get dict data and loads to :class:`bcp47py.schemas.grandfathered.Grandfathered`. Finally append to the grandfathered
         list.
 
-        :raise exceptions.invalid_data.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:"""
+        :raise exceptions.invalid.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:"""
         try:
             self._grandfathered.append(Grandfathered(**data_dict))
         except ValidationError as e:
@@ -384,7 +383,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
     def _load_redundant(self, data_dict: Dict[str, Any]):
         """Get dict data and loads to :class:`bcp47py.schemas.redundant.Redundant`. Finally append to the redundant list.
 
-        :raise exceptions.invalid_data.invalid_redundant_data_error.InvalidRedundantDataError:"""
+        :raise exceptions.invalid.invalid_redundant_data_error.InvalidRedundantDataError:"""
         try:
             self._redundant.append(Redundant(**data_dict))
         except ValidationError as e:
@@ -411,35 +410,17 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
             data_dict['scope'] = self.get_language_scope_by_name(langauge_scope)
 
         if prefix_s := data_dict.pop('prefix', None):
-            data_dict['prefix'] = self._parse_prefix(prefix_s, case_sensitive=True)
+            data_dict['prefix'] = self._parse_prefix(prefix_s)
 
-        return data_dict
-
-    def _parse_to_object_preferred_value(self, bcp47_type: BCP47Type, data_dict: Dict[str, Any],
-                                         preferred_value: str) -> Dict[str, Any]:
-        if bcp47_type == BCP47Type.LANGUAGE:
-            data_dict['preferred_value'] = self.get_language_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.EXTLANG:
-            data_dict['preferred_value'] = self.get_ext_lang_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.SCRIPT:
-            data_dict['preferred_value'] = self.get_script_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.REGION:
-            data_dict['preferred_value'] = self.get_region_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.VARIANT:
-            data_dict['preferred_value'] = self.get_variant_by_subtag(preferred_value)
-        elif bcp47_type == BCP47Type.GRANDFATHERED:
-            data_dict['preferred_value'] = self.get_grandfathered_by_tag(preferred_value)
-        elif bcp47_type == BCP47Type.REDUNDANT:
-            data_dict['preferred_value'] = self.get_redundant_by_tag(preferred_value)
-        else:
-            raise RuntimeError(f"Unexpected workflow bcp_type unknown: {bcp47_type}")
         return data_dict
 
     def _parse_prefix(
-            self, prefix_list: List[str],
-            case_sensitive: bool) -> List[Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
+            self, prefix_list: List[str]) -> List[Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
+        """Parse a list of string subtags to a dict of name of va
+        :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:"""
+
         prefix_f = []
 
         for prefix in prefix_list:
-            prefix_f.append(self._tag_parser(prefix, case_sensitive))
+            prefix_f.append(self._tag_parser(prefix, True))
         return prefix_f
