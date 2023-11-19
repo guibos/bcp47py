@@ -1,6 +1,6 @@
 import pytest
 
-from abstract.repository_abstract import RepositoryAbstract
+from base.repository_base import RepositoryBase
 from enums.language_scope import LanguageScopeEnum
 from repository import Repository
 from schemas.ext_lang import ExtLang
@@ -14,11 +14,11 @@ from schemas.variant import Variant
 
 
 @pytest.fixture(scope="session")
-def repository() -> RepositoryAbstract:
+def repository() -> RepositoryBase:
     return Repository()
 
 
-def test_bcp_data_script(repository: RepositoryAbstract):
+def test_bcp_data_script(repository: RepositoryBase):
     assert repository.scripts
 
     for script in repository.scripts:
@@ -28,7 +28,7 @@ def test_bcp_data_script(repository: RepositoryAbstract):
     assert latin.description == ['Latin']
 
 
-def test_bcp47_data_languages(repository: RepositoryAbstract):
+def test_bcp47_data_languages(repository: RepositoryBase):
     assert repository.languages
 
     for language in repository.languages:
@@ -38,7 +38,7 @@ def test_bcp47_data_languages(repository: RepositoryAbstract):
     assert english.description == ['English']
 
 
-def test_bcp47_data_language_scope(repository: RepositoryAbstract):
+def test_bcp47_data_language_scope(repository: RepositoryBase):
     assert len(repository.languages_scopes) == len(LanguageScopeEnum)
 
     for language_scope in repository.languages_scopes:
@@ -48,7 +48,7 @@ def test_bcp47_data_language_scope(repository: RepositoryAbstract):
         assert repository.get_language_scope_by_name(language_scope.value).scope == language_scope
 
 
-def test_bcp47_data_ext_lang(repository: RepositoryAbstract):
+def test_bcp47_data_ext_lang(repository: RepositoryBase):
     assert repository.ext_langs
 
     for ext_lang in repository.ext_langs:
@@ -58,7 +58,7 @@ def test_bcp47_data_ext_lang(repository: RepositoryAbstract):
     assert algerian_saharan_arabic.description == ['Algerian Saharan Arabic']
 
 
-def test_bcp47_data_region(repository: RepositoryAbstract):
+def test_bcp47_data_region(repository: RepositoryBase):
     assert repository.regions
 
     for region in repository.regions:
@@ -68,7 +68,7 @@ def test_bcp47_data_region(repository: RepositoryAbstract):
     assert spain.description == ['Spain']
 
 
-def test_bcp47_data_variant(repository: RepositoryAbstract):
+def test_bcp47_data_variant(repository: RepositoryBase):
     assert repository.variants
 
     for variant in repository.variants:
@@ -78,7 +78,7 @@ def test_bcp47_data_variant(repository: RepositoryAbstract):
     assert valencia.description == ['Valencian']
 
 
-def test_bcp47_data_grandfathered(repository: RepositoryAbstract):
+def test_bcp47_data_grandfathered(repository: RepositoryBase):
     assert repository.grandfathered
 
     for grandfathered in repository.grandfathered:
@@ -88,7 +88,7 @@ def test_bcp47_data_grandfathered(repository: RepositoryAbstract):
     assert gaulish.description == ['Gaulish']
 
 
-def test_bcp47_data_redundant(repository: RepositoryAbstract):
+def test_bcp47_data_redundant(repository: RepositoryBase):
     assert repository.redundant
 
     for redundant in repository.redundant:

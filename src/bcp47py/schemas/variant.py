@@ -16,7 +16,7 @@ class VariantPreferredValue(PreferredValue):
     """Class that adds :class:`bcp47py.schemas.variant.Variant` attribute that could be set as preferred value for a
     :class:`bcp47py.schemas.variant.Variant` type.
 
-    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.base.preferred_value.PreferredValue` class for more information about preferred value."""
 
     variant: 'Variant'
 
@@ -29,7 +29,7 @@ class VariantPrefix(ExtLangPrefix):
     :class:`bcp47py.schemas.variant.Variant` attributes, that could be set as preferred value from an
     :class:`bcp47py.schemas.variant.Variant` type.
 
-    Check :class:`bcp47py.schemas.abstract.prefix.Prefix` class for more information about prefix."""
+    Check :class:`bcp47py.schemas.base.prefix.Prefix` class for more information about prefix."""
     ext_lang: Optional[ExtLang] = None
     script: Optional[Script] = None
     region: Optional[Region] = None

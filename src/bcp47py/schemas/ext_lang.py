@@ -17,7 +17,7 @@ class ExtLangPreferredValue(PreferredValue):
     """Class that adds schemas.language.Language attribute that could be set as preferred value for an
     :class:`bcp47py.schemas.ext_lang.ExtLang` type.
 
-    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.base.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
 
     @property
@@ -29,7 +29,7 @@ class ExtLangPrefix(Prefix):
     """Class that adds :class:`bcp47py.schemas.language.Language` attribute, that could be set as preferred value
     from an :class:`bcp47py.schemas.ext_lang.ExtLang` type.
 
-    Check :class:`bcp47py.schemas.abstract.prefix.Prefix` class for more information about prefix."""
+    Check :class:`bcp47py.schemas.base.prefix.Prefix` class for more information about prefix."""
     language: Language
 
     @property

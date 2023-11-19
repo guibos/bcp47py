@@ -18,7 +18,7 @@ class GrandfatheredPreferredValue(PreferredValue):
     :class:`bcp47py.schemas.variant.Variant` attributes that could be set as preferred value for a
     :class:`bcp47py.schemas.grandfathered.Grandfathered` type.
 
-    Check :class:`bcp47py.schemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`bcp47py.schemas.base.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
     region: Optional[Region] = None
     variant: Optional[Variant] = None

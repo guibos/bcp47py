@@ -31,7 +31,7 @@ class SubtagDataFinder:
     data_dict_key: BCP47Type
 
 
-class RepositoryAbstract(abc.ABC):
+class RepositoryBase(abc.ABC):
 
     def __init__(self):
         self._SUBTAG_DATA_FINDER = [
