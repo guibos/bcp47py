@@ -1,3 +1,4 @@
+import abc
 import dataclasses
 from abc import ABC
 from typing import List, Dict, Union, Callable, Any
@@ -26,7 +27,8 @@ from schemas.variant import Variant
 from type_aliases import TagsOrSubtagType
 
 
-class RepositoryBase(RepositoryInterface):
+class RepositoryAbstract(RepositoryInterface, ABC):
+    """Basic implementation """
     def __init__(self):
         self._languages: List[Language] = []
         self._languages_scopes: List[LanguageScope] = []
@@ -44,6 +46,7 @@ class RepositoryBase(RepositoryInterface):
             _SubtagDataFinder(self.get_region_by_subtag, BCP47Type.REGION),
             _SubtagDataFinder(self.get_variant_by_subtag, BCP47Type.VARIANT)
         ]
+        self._load_data()
 
     @property
     def languages(self) -> List[Language]:
@@ -173,6 +176,10 @@ class RepositoryBase(RepositoryInterface):
         elif str_tag_or_subtag := getattr(model, 'tag', ''):
             return str_tag_or_subtag
         raise RuntimeError("Tag or subtag not found.")
+
+    @abc.abstractmethod
+    def _load_data(self):
+        """Main function that is responsible to load all data in the instance."""
 
 
 @dataclasses.dataclass

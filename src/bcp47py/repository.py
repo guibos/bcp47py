@@ -8,7 +8,7 @@ from typing import Optional, Dict, Any, Type, List, Union
 from pydantic import ValidationError
 
 from mixin.base import Base
-from base.repository_base import RepositoryBase
+from abstract.repository_abstract import RepositoryAbstract
 from exceptions.invalid.invalid_ext_lang_data_error import InvalidExtLanguageDataError
 from exceptions.invalid.invalid_grandfathered_data_error import InvalidGrandfatheredDataError
 from exceptions.invalid.invalid_language_data_error import InvalidLanguageDataError
@@ -52,7 +52,7 @@ class _AddNewDataReturn:
     previous_key: str
 
 
-class Repository(RepositoryBase, Base):  # pylint: disable=too-many-instance-attributes
+class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance-attributes
     """Repository that provides all data from the BCP47 specification in several dataclasses."""
     _BCP47_TYPE_PROCESSING_ORDER = [
         BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
@@ -99,14 +99,12 @@ class Repository(RepositoryBase, Base):  # pylint: disable=too-many-instance-att
         :raise exceptions.invalid.invalid_ext_lang_error.InvalidExtLanguageDataError:
         :raise exceptions.invalid.invalid_script_data_error.InvalidScriptDataError:
         :raise exceptions.invalid.invalid_region_data_error.InvalidRegionDataError:
-        :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError
+        :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError:
         :raise exceptions.invalid.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:
         :raise exceptions.invalid.invalid_redundant_data_error.InvalidRedundantDataError:"""
-        super().__init__()
         self._language_subtag_registry_file_path = (language_subtag_registry_file_path
                                                     or self._LANGUAGE_SUBTAG_REGISTRY_FILE_PATH)
-
-        self._load_data()
+        super().__init__()
 
     def _load_data(self):
         """Main function that is responsible to load all data in the instance.
