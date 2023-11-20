@@ -1,4 +1,4 @@
-"""Common aliases of BCP47Py."""
+"""Common aliases of from exceptions.invalid.base.invalid_data_error import InvalidDataError"""
 
 from typing import Union
 

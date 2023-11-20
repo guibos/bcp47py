@@ -23,7 +23,7 @@ class RepositoryInterface(abc.ABC):
     def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
         """Return a Language by his subtag.
 
-        :raise bcp47py.exceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError:"""
+        :raise from exceptions.invalid.base.invalid_data_error import InvalidDataErrorexceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError:"""
 
     @property
     @abc.abstractmethod
@@ -34,7 +34,7 @@ class RepositoryInterface(abc.ABC):
     def get_language_scope_by_name(self, name: str) -> LanguageScope:
         """Return a LanguageScope by his subtag.
 
-        :raise bcp47py.exceptions.not_found.language_scope_not_found_error.LanguageScopeNotFoundError:
+        :raise from exceptions.invalid.base.invalid_data_error import InvalidDataErrorexceptions.not_found.language_scope_not_found_error.LanguageScopeNotFoundError:
         :raise RuntimeError:"""
 
     @property
@@ -46,7 +46,7 @@ class RepositoryInterface(abc.ABC):
     def get_ext_lang_by_subtag(self, subtag: str, case_sensitive: bool = False) -> ExtLang:
         """Return a ExtLang by his subtag.
 
-        :raise bcp47py.exceptions.not_found.ext_lang_subtag_not_found_error.ExtLangSubtagNotFoundError:"""
+        :raise from exceptions.invalid.base.invalid_data_error import InvalidDataErrorexceptions.not_found.ext_lang_subtag_not_found_error.ExtLangSubtagNotFoundError:"""
 
     @property
     @abc.abstractmethod
@@ -57,7 +57,7 @@ class RepositoryInterface(abc.ABC):
     def get_script_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Script:
         """Return a Script by his subtag.
 
-        :raise bcp47py.exceptions.not_found.script_subtag_not_found_error.ScriptSubtagNotFoundError:"""
+        :raise from exceptions.invalid.base.invalid_data_error import InvalidDataErrorexceptions.not_found.script_subtag_not_found_error.ScriptSubtagNotFoundError:"""
 
     @property
     @abc.abstractmethod

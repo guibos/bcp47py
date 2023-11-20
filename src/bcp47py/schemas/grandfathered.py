@@ -14,11 +14,11 @@ from schemas.variant import Variant
 
 
 class GrandfatheredPreferredValue(PreferredValue):
-    """Class that adds :class:`bcp47py.schemas.language.Language`, :class:`bcp47py.schemas.region.Region` and
-    :class:`bcp47py.schemas.variant.Variant` attributes that could be set as preferred value for a
-    :class:`bcp47py.schemas.grandfathered.Grandfathered` type.
+    """Class that adds :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.language.Language`, :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.region.Region` and
+    :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.variant.Variant` attributes that could be set as preferred value for a
+    :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.grandfathered.Grandfathered` type.
 
-    Check :class:`bcp47py.schemas.interface.preferred_value.PreferredValue` class for more information about preferred value."""
+    Check :class:`from exceptions.invalid.base.invalid_data_error import InvalidDataErrorschemas.interface.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
     region: Optional[Region] = None
     variant: Optional[Variant] = None
