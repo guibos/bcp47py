@@ -5,7 +5,7 @@ from urllib.request import urlopen
 
 from pydantic import Field
 
-from base.base import Base
+from mixin.base import Base
 
 _FILE_CONTENT_FIELD_INFO = Field(
     title="File Content",

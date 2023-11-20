@@ -7,7 +7,7 @@ from typing import Optional, Dict, Any, Type, List, Union
 
 from pydantic import ValidationError
 
-from base.base import Base
+from mixin.base import Base
 from base.repository_base import RepositoryBase
 from exceptions.invalid.invalid_ext_lang_data_error import InvalidExtLanguageDataError
 from exceptions.invalid.invalid_grandfathered_data_error import InvalidGrandfatheredDataError

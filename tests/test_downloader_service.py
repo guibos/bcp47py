@@ -5,7 +5,7 @@ import pytest
 from _pytest.fixtures import fixture
 from _pytest.tmpdir import TempPathFactory
 
-from base.base import Base
+from mixin.base import Base
 from downloader_service import DownloaderService
 
 
