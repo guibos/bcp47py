@@ -1,3 +1,4 @@
+"""Module related with LanguageScopeEnum."""
 import enum
 
 

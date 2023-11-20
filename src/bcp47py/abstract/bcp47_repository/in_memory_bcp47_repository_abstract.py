@@ -1,3 +1,4 @@
+"""Module related with InMemoryBCP47RepositoryAbstract class."""
 import abc
 import dataclasses
 from abc import ABC
@@ -14,7 +15,7 @@ from exceptions.not_found.region_subtag_not_found_error import RegionSubtagNotFo
 from exceptions.not_found.script_subtag_not_found_error import ScriptSubtagNotFoundError
 from exceptions.not_found.tag_or_subtag_not_found_error import TagOrSubtagNotFoundError
 from exceptions.not_found.variant_subtag_not_found_error import VariantSubtagNotFoundError
-from interface.repository_interface import RepositoryInterface
+from interface.bcp47_repository.bcp47_repository_interface import BCP47RepositoryInterface
 from schemas.ext_lang import ExtLang
 from schemas.grandfathered import Grandfathered
 from schemas.language import Language
@@ -27,8 +28,10 @@ from schemas.variant import Variant
 from type_aliases import TagsOrSubtagType
 
 
-class RepositoryAbstract(RepositoryInterface, ABC):
-    """Basic implementation """
+class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
+    """Basic in memory implementation of
+    :class:`interface.bcp47_repository.bcp47_repository_interface.BCP47RepositoryInterface`. It requires implementation
+    of :func:`abstract.bcp47_repository.in_memory_repository_abstract.InMemoryRepositoryAbstract._load_data` to work."""
     def __init__(self):
         self._languages: List[Language] = []
         self._languages_scopes: List[LanguageScope] = []

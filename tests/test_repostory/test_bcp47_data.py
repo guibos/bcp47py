@@ -2,7 +2,7 @@ import pytest
 
 
 from enums.language_scope import LanguageScopeEnum
-from interface.repository_interface import RepositoryInterface
+from interface.bcp47_repository.bcp47_repository_interface import BCP47RepositoryInterface
 from repository import Repository
 from schemas.ext_lang import ExtLang
 from schemas.grandfathered import Grandfathered
@@ -15,11 +15,11 @@ from schemas.variant import Variant
 
 
 @pytest.fixture(scope="session")
-def repository() -> RepositoryInterface:
+def repository() -> BCP47RepositoryInterface:
     return Repository()
 
 
-def test_bcp_data_script(repository: RepositoryInterface):
+def test_bcp_data_script(repository: BCP47RepositoryInterface):
     assert repository.scripts
 
     for script in repository.scripts:
@@ -29,7 +29,7 @@ def test_bcp_data_script(repository: RepositoryInterface):
     assert latin.description == ['Latin']
 
 
-def test_bcp47_data_languages(repository: RepositoryInterface):
+def test_bcp47_data_languages(repository: BCP47RepositoryInterface):
     assert repository.languages
 
     for language in repository.languages:
@@ -39,7 +39,7 @@ def test_bcp47_data_languages(repository: RepositoryInterface):
     assert english.description == ['English']
 
 
-def test_bcp47_data_language_scope(repository: RepositoryInterface):
+def test_bcp47_data_language_scope(repository: BCP47RepositoryInterface):
     assert len(repository.languages_scopes) == len(LanguageScopeEnum)
 
     for language_scope in repository.languages_scopes:
@@ -49,7 +49,7 @@ def test_bcp47_data_language_scope(repository: RepositoryInterface):
         assert repository.get_language_scope_by_name(language_scope.value).scope == language_scope
 
 
-def test_bcp47_data_ext_lang(repository: RepositoryInterface):
+def test_bcp47_data_ext_lang(repository: BCP47RepositoryInterface):
 
     assert repository.ext_langs
 
@@ -60,7 +60,7 @@ def test_bcp47_data_ext_lang(repository: RepositoryInterface):
     assert algerian_saharan_arabic.description == ['Algerian Saharan Arabic']
 
 
-def test_bcp47_data_region(repository: RepositoryInterface):
+def test_bcp47_data_region(repository: BCP47RepositoryInterface):
     assert repository.regions
 
     for region in repository.regions:
@@ -71,7 +71,7 @@ def test_bcp47_data_region(repository: RepositoryInterface):
 
 
 
-def test_bcp47_data_variant(repository: RepositoryInterface):
+def test_bcp47_data_variant(repository: BCP47RepositoryInterface):
     assert repository.variants
 
     for variant in repository.variants:
@@ -81,7 +81,7 @@ def test_bcp47_data_variant(repository: RepositoryInterface):
     assert valencia.description == ['Valencian']
 
 
-def test_bcp47_data_grandfathered(repository: RepositoryInterface):
+def test_bcp47_data_grandfathered(repository: BCP47RepositoryInterface):
     assert repository.grandfathered
 
     for grandfathered in repository.grandfathered:
@@ -92,7 +92,7 @@ def test_bcp47_data_grandfathered(repository: RepositoryInterface):
 
 
 
-def test_bcp47_data_redundant(repository: RepositoryInterface):
+def test_bcp47_data_redundant(repository: BCP47RepositoryInterface):
     assert repository.redundant
 
     for redundant in repository.redundant:

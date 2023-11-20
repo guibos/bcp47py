@@ -8,7 +8,7 @@ from typing import Optional, Dict, Any, Type, List, Union
 from pydantic import ValidationError
 
 from mixin.base import Base
-from abstract.repository_abstract import RepositoryAbstract
+from abstract.bcp47_repository.in_memory_bcp47_repository_abstract import BCP47InMemoryRepositoryAbstract
 from exceptions.invalid.invalid_ext_lang_data_error import InvalidExtLanguageDataError
 from exceptions.invalid.invalid_grandfathered_data_error import InvalidGrandfatheredDataError
 from exceptions.invalid.invalid_language_data_error import InvalidLanguageDataError
@@ -52,7 +52,7 @@ class _AddNewDataReturn:
     previous_key: str
 
 
-class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance-attributes
+class Repository(BCP47InMemoryRepositoryAbstract, Base):  # pylint: disable=too-many-instance-attributes
     """Repository that provides all data from the BCP47 specification in several dataclasses."""
     _BCP47_TYPE_PROCESSING_ORDER = [
         BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
@@ -233,7 +233,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
 
     @staticmethod
     def _append_data(previous_key: Optional[str], data: Dict[str, Any], value: str) -> Dict[str, Any]:
-        """Case of :func:repository.Repository._parse_item when a new line start with space. It occurs when the data
+        """Case of :func:bcp47_repository.Repository._parse_item when a new line start with space. It occurs when the data
         surpasses the max column size and requires to break the line. If previous key is a list it should be
         concatenated with the last value of the list. If is string it is only required to be concatenated with the
         value of previous key.
@@ -253,7 +253,7 @@ class Repository(RepositoryAbstract, Base):  # pylint: disable=too-many-instance
         return data
 
     def _add_new_data(self, data_dict: Dict[str, Any], value: str) -> _AddNewDataReturn:
-        """Case of :func:repository.Repository._parse_item when it is required to parse a new key value.
+        """Case of :func:bcp47_repository.Repository._parse_item when it is required to parse a new key value.
 
         :raise exceptions.unexpected_bcp47_key_error.UnexpectedBCP47KeyError:
         :raise exceptions.unexpected_bcp47_duplicated_key.UnexpectedBCP47DuplicatedKeyError:

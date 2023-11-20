@@ -12,7 +12,7 @@ from schemas.subtags import Subtags
 from schemas.variant import Variant
 
 
-class RepositoryInterface(abc.ABC):
+class BCP47RepositoryInterface(abc.ABC):
 
     @property
     @abc.abstractmethod
