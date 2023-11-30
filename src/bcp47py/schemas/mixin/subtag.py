@@ -16,3 +16,7 @@ class Subtag(BaseType):
     """Mixin that must be used by subtag types (all except :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.redundant.Redundant` and
     :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.grandfathered.Grandfathered` types)."""
     subtag: Annotated[str, _SUBTAG_FIELD_INFO]
+
+    @property
+    def tag_str(self) -> str:
+        return self.subtag

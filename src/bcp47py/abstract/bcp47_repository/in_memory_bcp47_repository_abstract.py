@@ -32,6 +32,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
     """Basic in memory implementation of
     :class:`interface.bcp47_repository.bcp47_repository_interface.BCP47RepositoryInterface`. It requires implementation
     of :func:`abstract.bcp47_repository.in_memory_repository_abstract.InMemoryRepositoryAbstract._load_data` to work."""
+
     def __init__(self):
         self._languages: List[Language] = []
         self._languages_scopes: List[LanguageScope] = []
@@ -140,22 +141,23 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
         """Method that parse a bcp47 string tag and return a dataclass with all subtags information."""
         return Subtags(**self._tag_parser(tag, case_sensitive))
 
-    def _subtag_filter(self, subtag_str: str, tag_or_subtag_list: List[TagsOrSubtagType],
+    @staticmethod
+    def _subtag_filter(subtag_str: str, tag_or_subtag_list: List[TagsOrSubtagType],
                        case_sensitive: bool) -> TagsOrSubtagType:
-        """Method that for """
+        """Method that helps to find a subtag object in a list through subtag string."""
         if not case_sensitive:
             subtag_str = subtag_str.lower()
         for subtag in tag_or_subtag_list:
-            tag_or_subtag_str = self._get_tag_or_subtag(subtag)
+            tag_str = subtag.tag_str
             if not case_sensitive:
-                tag_or_subtag_str = tag_or_subtag_str.lower()
-            if subtag_str == tag_or_subtag_str:
+                tag_str = tag_str.lower()
+            if subtag_str == tag_str:
                 return subtag
         raise TagOrSubtagNotFoundError(subtag_str)
 
     def _tag_parser(self, tag: str,
                     case_sensitive: bool) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]:
-        """
+        """Method that parse a string tag and return a Dict with all subtag objects contained in previous string tag.
         :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:
         """
         i = 0
@@ -167,20 +169,12 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
                 try:
                     tag_or_subtag_data[
                         self._SUBTAG_DATA_FINDER[i].bcp47_subtag_type.value] = self._SUBTAG_DATA_FINDER[i].callable(
-                            subtag, case_sensitive)
+                        subtag, case_sensitive)
                     break
                 except TagOrSubtagNotFoundError:
                     i += 1
                     continue
         return tag_or_subtag_data
-
-    @staticmethod
-    def _get_tag_or_subtag(model: TagsOrSubtagType) -> str:
-        if str_tag_or_subtag := getattr(model, 'subtag', ''):
-            return str_tag_or_subtag
-        elif str_tag_or_subtag := getattr(model, 'tag', ''):
-            return str_tag_or_subtag
-        raise RuntimeError("Tag or subtag not found.")
 
     @abc.abstractmethod
     def _load_data(self):

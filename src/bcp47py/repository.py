@@ -8,7 +8,8 @@ from typing import Optional, Dict, Any, Type, List, Union
 from pydantic import ValidationError
 
 from abstract.bcp47_repository.in_memory_bcp47_repository_abstract import InMemoryBCP47RepositoryAbstract
-from mixin.base import Base
+from enums.bcp47_type import BCP47Type
+from enums.language_scope import LanguageScopeEnum
 from exceptions.invalid.invalid_ext_lang_data_error import InvalidExtLanguageDataError
 from exceptions.invalid.invalid_grandfathered_data_error import InvalidGrandfatheredDataError
 from exceptions.invalid.invalid_language_data_error import InvalidLanguageDataError
@@ -21,13 +22,12 @@ from exceptions.unexpected_bcp47.unexpected_bcp47_duplicated_key import Unexpect
 from exceptions.unexpected_bcp47.unexpected_bcp47_key_error import UnexpectedBCP47KeyError
 from exceptions.unexpected_bcp47.unexpected_bcp47_key_type_error import UnexpectedBCP47KeyTypeError
 from exceptions.unexpected_bcp47.unexpected_bcp47_missing_file_date_error import UnexpectedBCP47MissingFileDateError
-from enums.bcp47_type import BCP47Type
-from enums.language_scope import LanguageScopeEnum
 from exceptions.unexpected_bcp47.unexpected_bcp47_missing_type_error import UnexpectedBCP47MissingTypeError
 from exceptions.unexpected_bcp47.unexpected_bcp47_no_previous_key_error import UnexpectedBCP47NoPreviousKeyError
 from exceptions.unexpected_bcp47.unexpected_bcp47_previous_data_type_error import UnexpectedBCP47PreviousDataTypeError
 from exceptions.unexpected_bcp47.unexpected_bcp47_type_error import UnexpectedBCP47TypeError
 from exceptions.unexpected_bcp47.unexpected_bcp47_value_error import UnexpectedBCP47ValueError
+from mixin.base import Base
 from schemas.ext_lang import ExtLang
 from schemas.grandfathered import Grandfathered
 from schemas.language import Language
@@ -411,7 +411,8 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
         return data_dict
 
     def _parse_prefix(
-            self, prefix_list: List[str]) -> List[Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
+            self, prefix_list: List[str]) -> List[
+        Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
         """Parse a list of string subtags to a dict of name of va
         :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:"""
 

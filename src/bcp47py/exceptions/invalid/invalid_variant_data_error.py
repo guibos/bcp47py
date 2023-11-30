@@ -7,5 +7,6 @@ class InvalidVariantDataError(InvalidDataError):
     """Exception that should be raised when Variant data is invalid."""
     _BCP47_TYPE = BCP47Type.VARIANT
 
+    @property
     def _bcp47_type(self) -> BCP47Type:
         return self._BCP47_TYPE

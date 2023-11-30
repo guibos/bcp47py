@@ -1,0 +1,85 @@
+File-Date: 2023-10-16
+%%
+Type: script
+Subtag: Latn
+Description: Latin
+Added: 2005-10-16
+%%
+Type: script
+Subtag: Fake
+Description: Fake script
+Description: Another Fake Script
+Comments: Fake comment for a fake script
+Comments: Another fake comment
+Added: 2011-01-07
+%%
+Type: language
+Subtag: en
+Description: English
+Added: 2005-10-16
+Suppress-Script: Latn
+%%
+Type: language
+Subtag: aav
+Description: Austro-Asiatic languages
+Added: 2009-07-29
+Suppress-Script: Latn
+Scope: macrolanguage
+%%
+Type: language
+Subtag: f1
+Description: Fake Language
+Description: Fake Language F1
+Added: 2005-10-16
+Suppress-Script: Latn
+Macrolanguage: aav
+Comments: Fake language comment
+Comments: Another language
+Preferred-Value: en
+Deprecated: 2023-08-02
+%%
+Type: extlang
+Subtag: en
+Description: Ext lang 1
+Added: 2009-07-29
+Preferred-Value: en
+Prefix: f1
+%%
+Type: extlang
+Subtag: f1
+Description: Ext lang 2
+Description: 2
+Added: 2020-07-29
+Preferred-Value: f1
+Deprecated: 2010-07-29
+Macrolanguage: aav
+Prefix: f1
+Prefix: aav
+%%
+Type: region
+Subtag: GB
+Description: United Kingdom
+Added: 2005-10-16
+Comments: as of 2006-03-29 GB no longer includes the Channel Islands and Isle of Man; see GG, JE, IM
+%%
+Type: region
+Subtag: FK
+Description: Fake 1
+Description: Fake Plus
+Added: 2005-10-16
+Deprecated: 2010-07-29
+Preferred-Value: GB
+%%
+Type: variant
+Subtag: fake1
+Description: Variant test 1
+Description: Variant test 2
+Added: 2005-04-17
+%%
+Type: variant
+Subtag: oxendict
+Description: Oxford English Dictionary spelling
+Added: 2005-04-17
+Prefix: en-en-Latn-GB-fake1
+Prefix: aav-f1-Fake-FK-fake1
+Comments: test variant

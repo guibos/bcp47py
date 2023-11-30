@@ -2,7 +2,6 @@
 from typing import Annotated
 from urllib.request import urlopen
 
-
 from pydantic import Field
 
 from mixin.base import Base

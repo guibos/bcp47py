@@ -1,5 +1,6 @@
 """Module that contains BaseType abstract."""
-
+import abc
+from abc import ABC
 from datetime import datetime
 from typing import List, Annotated
 
@@ -26,10 +27,15 @@ _UPDATED_AT_FIELD_INFO = Field(
 )
 
 
-class BaseType(BaseModel):
+class BaseType(BaseModel, ABC):
     """Mixin that must be used by all BCP47 types. Only contains fields that are common between all BCP47 types."""
     description: Annotated[List[str], _DESCRIPTION_FIELD_INFO]
     added: Annotated[datetime, _ADDED_FIELD_INFO]
     updated_at: Annotated[datetime, _UPDATED_AT_FIELD_INFO]
+
+    @property
+    @abc.abstractmethod
+    def tag_str(self) -> str:
+        """Return the string tag. If only have a subtag return the subtag."""
 
     model_config = ConfigDict(extra='forbid')

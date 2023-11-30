@@ -18,3 +18,7 @@ class Tag(BaseType):
     """Mixin that must be used by tag types (only :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.redundant.Redundant` and
     :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.grandfathered.Grandfathered` types)."""
     tag: Annotated[str, _TAG_FIELD_INFO]
+
+    @property
+    def tag_str(self) -> str:
+        return self.tag
