@@ -2,6 +2,7 @@ import dataclasses
 import datetime
 from typing import List, Type
 
+from enums.language_scope import LanguageScopeEnum
 from interface.bcp47_repository.bcp47_repository_interface import BCP47RepositoryInterface
 from repository import Repository
 from schemas.ext_lang import ExtLang
@@ -110,18 +111,15 @@ def test_language_fake(repository: BCP47RepositoryInterface):
     assert language.deprecated == datetime.datetime(2023, 8, 2)
 
 
+def test_bcp47_data_language_scope(repository: BCP47RepositoryInterface):
+    assert len(repository.languages_scopes) == len(LanguageScopeEnum)
 
-#
-#
-# def test_bcp47_data_language_scope(repository: BCP47RepositoryInterface):
-#     assert len(repository.languages_scopes) == len(LanguageScopeEnum)
-#
-#     for language_scope in repository.languages_scopes:
-#         assert isinstance(language_scope, LanguageScope)
-#
-#     for language_scope in LanguageScopeEnum:
-#         assert repository.get_language_scope_by_name(language_scope.value).scope == language_scope
-#
+    for language_scope in repository.languages_scopes:
+        assert isinstance(language_scope, LanguageScope)
+
+    for language_scope in LanguageScopeEnum:
+        assert repository.get_language_scope_by_name(language_scope.value).scope == language_scope
+
 #
 # def test_bcp47_data_ext_lang(repository: BCP47RepositoryInterface):
 #
