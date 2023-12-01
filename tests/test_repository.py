@@ -1,12 +1,12 @@
 import dataclasses
 import datetime
-from typing import List, Union, Type
+from typing import List, Type
 
 from interface.bcp47_repository.bcp47_repository_interface import BCP47RepositoryInterface
 from repository import Repository
 from schemas.ext_lang import ExtLang
 from schemas.grandfathered import Grandfathered
-from schemas.language import Language
+from schemas.language import Language, LanguagePreferredValue
 from schemas.language_scope import LanguageScope
 from schemas.redundant import Redundant
 from schemas.region import Region
@@ -41,12 +41,12 @@ def _generic_test_repo(repository: BCP47RepositoryInterface):
         _check_type(relationship.data_list, relationship.schema)
 
 
-def test_generic_repository_non_mocked_data():
+def test_generic_non_mocked_data():
     repository = Repository()
     _generic_test_repo(repository)
 
 
-def test_generic_repository_mocked_data(repository: BCP47RepositoryInterface):
+def test_generic_mocked_data(repository: BCP47RepositoryInterface):
     _generic_test_repo(repository)
 
 
@@ -70,19 +70,47 @@ def test_script_fake(repository: BCP47RepositoryInterface):
 
 def test_language_english(repository: BCP47RepositoryInterface):
     language = repository.get_language_by_subtag('en')
-    assert language.added == datetime.datetime(2005, 10, 16)
-    assert language.comments == []
-    assert language.deprecated is None
     assert language.description == ['English']
-    assert language.macro_language
-    assert langu
+    assert language.added == datetime.datetime(2005, 10, 16)
+    assert language.updated_at == datetime.datetime(2023, 10, 16)
+    assert language.subtag == 'en'
+    assert language.macro_language is None
+    assert language.scope is None
+    assert language.comments == []
+    assert language.suppress_script == repository.get_script_by_subtag('Latn')
+    assert language.preferred_value is None
+    assert language.deprecated is None
 
 
-    for language in repository.languages:
-        assert isinstance(language, Language)
+def test_language_austro_asiatic(repository: BCP47RepositoryInterface):
+    language = repository.get_language_by_subtag('f1')
+    assert language.description == ['Austro-Asiatic languages']
+    assert language.added == datetime.datetime(2009, 7, 29)
+    assert language.updated_at == datetime.datetime(2023, 10, 16)
+    assert language.subtag == 'aav'
+    assert language.macro_language is None
+    assert language.scope == repository.get_language_scope_by_name('macrolanguage')
+    assert language.comments == []
+    assert language.suppress_script == repository.get_script_by_subtag('Latn')
+    assert language.preferred_value is None
+    assert language.deprecated is None
 
-    english = repository.get_language_by_subtag('en')
-    assert english.description == ['English']
+
+def test_language_fake(repository: BCP47RepositoryInterface):
+    language = repository.get_language_by_subtag('f1')
+    assert language.description == ['Fake Language', 'Fake Language F1']
+    assert language.added == datetime.datetime(2005, 10, 16)
+    assert language.updated_at == datetime.datetime(2023, 10, 16)
+    assert language.subtag == 'f1'
+    assert language.macro_language == repository.get_language_by_subtag('aav')
+    assert language.scope is None
+    assert language.comments == ['Fake language comment', 'Another language']
+    assert language.suppress_script is None
+    assert language.preferred_value == LanguagePreferredValue(language=repository.get_language_by_subtag('en'))
+    assert language.deprecated == datetime.datetime(2023, 8, 2)
+
+
+
 #
 #
 # def test_bcp47_data_language_scope(repository: BCP47RepositoryInterface):
