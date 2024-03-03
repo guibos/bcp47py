@@ -1,5 +1,5 @@
 import abc
-from typing import List
+from typing import List, Iterable
 
 from schemas.ext_lang import ExtLang
 from schemas.grandfathered import Grandfathered
@@ -16,52 +16,52 @@ class BCP47RepositoryInterface(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def languages(self) -> List[Language]:
+    def languages(self) -> Iterable[Language]:
         """Return the list of Language that are included in BCP47."""
 
     @abc.abstractmethod
     def get_language_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Language:
         """Return a Language by his subtag.
 
-        :raise from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorexceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError:"""
+        :raise exceptions.not_found.language_subtag_not_found_error.LanguageSubtagNotFoundError:"""
 
     @property
     @abc.abstractmethod
-    def languages_scopes(self) -> List[LanguageScope]:
+    def languages_scopes(self) -> Iterable[LanguageScope]:
         """Return the list of LanguageScope that are included in BCP47."""
 
     @abc.abstractmethod
     def get_language_scope_by_name(self, name: str) -> LanguageScope:
         """Return a LanguageScope by his subtag.
 
-        :raise from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorexceptions.not_found.language_scope_not_found_error.LanguageScopeNotFoundError:
+        :raise exceptions.not_found.language_scope_not_found_error.LanguageScopeNotFoundError:
         :raise RuntimeError:"""
 
     @property
     @abc.abstractmethod
-    def ext_langs(self) -> List[ExtLang]:
+    def ext_langs(self) -> Iterable[ExtLang]:
         """Return the list of ExtLangs that are included in BCP47."""
 
     @abc.abstractmethod
     def get_ext_lang_by_subtag(self, subtag: str, case_sensitive: bool = False) -> ExtLang:
         """Return a ExtLang by his subtag.
 
-        :raise from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorexceptions.not_found.ext_lang_subtag_not_found_error.ExtLangSubtagNotFoundError:"""
+        :raise exceptions.not_found.ext_lang_subtag_not_found_error.ExtLangSubtagNotFoundError:"""
 
     @property
     @abc.abstractmethod
-    def scripts(self) -> List[Script]:
+    def scripts(self) -> Iterable[Script]:
         """Return the list of Scripts that are included in BCP47."""
 
     @abc.abstractmethod
     def get_script_by_subtag(self, subtag: str, case_sensitive: bool = False) -> Script:
         """Return a Script by his subtag.
 
-        :raise from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorexceptions.not_found.script_subtag_not_found_error.ScriptSubtagNotFoundError:"""
+        :raise exceptions.not_found.script_subtag_not_found_error.ScriptSubtagNotFoundError:"""
 
     @property
     @abc.abstractmethod
-    def regions(self) -> List[Region]:
+    def regions(self) -> Iterable[Region]:
         """Return the list of Scripts that are included in BCP47."""
 
     @abc.abstractmethod
@@ -70,7 +70,7 @@ class BCP47RepositoryInterface(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def variants(self) -> List[Variant]:
+    def variants(self) -> Iterable[Variant]:
         """Return the list of Variants that are included in BCP47."""
 
     @abc.abstractmethod
@@ -79,7 +79,7 @@ class BCP47RepositoryInterface(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def grandfathered(self) -> List[Grandfathered]:
+    def grandfathered(self) -> Iterable[Grandfathered]:
         """Return the list of Grandfathered that are included in BCP47."""
 
     @abc.abstractmethod
@@ -88,7 +88,7 @@ class BCP47RepositoryInterface(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def redundant(self) -> List[Redundant]:
+    def redundant(self) -> Iterable[Redundant]:
         """Return the list of Redundant that are included in BCP47."""
 
     @abc.abstractmethod

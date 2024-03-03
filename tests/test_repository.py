@@ -84,7 +84,7 @@ def test_language_english(repository: BCP47RepositoryInterface):
 
 
 def test_language_austro_asiatic(repository: BCP47RepositoryInterface):
-    language = repository.get_language_by_subtag('f1')
+    language = repository.get_language_by_subtag('aav')
     assert language.description == ['Austro-Asiatic languages']
     assert language.added == datetime.datetime(2009, 7, 29)
     assert language.updated_at == datetime.datetime(2023, 10, 16)
@@ -119,6 +119,7 @@ def test_bcp47_data_language_scope(repository: BCP47RepositoryInterface):
 
     for language_scope in LanguageScopeEnum:
         assert repository.get_language_scope_by_name(language_scope.value).scope == language_scope
+
 
 #
 # def test_bcp47_data_ext_lang(repository: BCP47RepositoryInterface):

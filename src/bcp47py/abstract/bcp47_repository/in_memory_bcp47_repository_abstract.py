@@ -169,7 +169,7 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
                 try:
                     tag_or_subtag_data[
                         self._SUBTAG_DATA_FINDER[i].bcp47_subtag_type.value] = self._SUBTAG_DATA_FINDER[i].callable(
-                        subtag, case_sensitive)
+                            subtag, case_sensitive)
                     break
                 except TagOrSubtagNotFoundError:
                     i += 1

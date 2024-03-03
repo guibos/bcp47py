@@ -16,4 +16,4 @@ SubtagType = Union[Script, Language, Region, ExtLang, Variant]
 TagsOrSubtagType = Union[TagsType, SubtagType]
 MainDataObjects = Union[TagsOrSubtagType, LanguageScope]
 PreferredValuesType = Union[LanguagePreferredValue, RegionPreferredValue, ExtLangPreferredValue, VariantPreferredValue,
-GrandfatheredPreferredValue, RedundantPreferredValue]
+                            GrandfatheredPreferredValue, RedundantPreferredValue]

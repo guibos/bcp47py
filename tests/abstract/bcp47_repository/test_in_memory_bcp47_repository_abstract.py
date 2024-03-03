@@ -11,4 +11,3 @@ from schemas.redundant import Redundant
 from schemas.region import Region
 from schemas.script import Script
 from schemas.variant import Variant
-

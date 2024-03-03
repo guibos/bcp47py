@@ -6,11 +6,10 @@ from pydantic import Field
 
 from mixin.base import Base
 
-_FILE_CONTENT_FIELD_INFO = Field(
-    title="File Content",
-    description="""File content in string format.""",
-    examples=[
-        """File-Date: 2023-10-16
+_FILE_CONTENT_FIELD_INFO = Field(title="File Content",
+                                 description="""File content in string format.""",
+                                 examples=[
+                                     """File-Date: 2023-10-16
         %%
         Type: language
         Subtag: aa
@@ -18,9 +17,7 @@ _FILE_CONTENT_FIELD_INFO = Field(
         Added: 2005-10-16
         %%
         ...""",
-    ]
-
-)
+                                 ])
 
 
 class DownloaderService(Base):  # pylint: disable=too-few-public-methods

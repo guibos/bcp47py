@@ -128,8 +128,8 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
         self._load_bcp47()
 
     def _load_languages_scopes(self):
-        """Function that create :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.language_scope.LanguageScope` instances for each value of
-        :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorenums.language_scope.LanguageScopeEnum` enum."""
+        """Function that create :class:`schemas.language_scope.LanguageScope` instances for each value of
+        :class:`enums.language_scope.LanguageScopeEnum` enum."""
         for language_scope in LanguageScopeEnum:
             self._languages_scopes.append(LanguageScope(scope=language_scope))
 
@@ -231,8 +231,8 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
 
     @staticmethod
     def _append_data(previous_key: Optional[str], data: Dict[str, Any], value: str) -> Dict[str, Any]:
-        """Case of :func:bcp47_repository.Repository._parse_item when a new line start with space. It occurs when the data
-        surpasses the max column size and requires to break the line. If previous key is a list it should be
+        """Case of :func:bcp47_repository.Repository._parse_item when a new line start with space. It occurs when the
+        data surpasses the max column size and requires to break the line. If previous key is a list it should be
         concatenated with the last value of the list. If is string it is only required to be concatenated with the
         value of previous key.
 
@@ -322,7 +322,8 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
             raise UnexpectedBCP47TypeError(bcp47_type)
 
     def _load_language(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.language.Language` dataclass. Finally append to the languages list.
+        """Get dict data and loads to :class:`schemas.language.Language` dataclass. Finally append to the languages
+        list.
 
         :raise exceptions.invalid.invalid_language_data_error.InvalidLanguageDataError:"""
         try:
@@ -331,7 +332,7 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
             raise InvalidLanguageDataError(data_dict) from e
 
     def _load_ext_lang(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.ext_lang.ExtLang`. Finally append to the ext languages list.
+        """Get dict data and loads to :class:`schemas.ext_lang.ExtLang`. Finally append to the ext languages list.
 
         :raise exceptions.invalid.invalid_ext_lang_error.InvalidExtLanguageDataError:"""
         try:
@@ -340,7 +341,7 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
             raise InvalidExtLanguageDataError(data_dict) from e
 
     def _load_script(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.script.Script`. Finally append to the scripts list.
+        """Get dict data and loads to :class:`schemas.script.Script`. Finally append to the scripts list.
 
         :raise exceptions.invalid.invalid_script_data_error.InvalidScriptDataError:"""
         try:
@@ -349,7 +350,7 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
             raise InvalidScriptDataError(data_dict) from e
 
     def _load_region(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.region.Region`. Finally append to the region list.
+        """Get dict data and loads to :class:`schemas.region.Region`. Finally append to the region list.
 
         :raise exceptions.invalid.invalid_region_data_error.InvalidRegionDataError:"""
         try:
@@ -358,7 +359,7 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
             raise InvalidRegionDataError(data_dict) from e
 
     def _load_variant(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.variant.Variant`. Finally append to the variants list.
+        """Get dict data and loads to :class:`schemas.variant.Variant`. Finally append to the variants list.
 
         :raise exceptions.invalid.invalid_variant_data_error.InvalidVariantDataError:"""
         try:
@@ -367,7 +368,7 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
             raise InvalidVariantDataError(data_dict) from e
 
     def _load_grandfathered(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.grandfathered.Grandfathered`. Finally append to the grandfathered
+        """Get dict data and loads to :class:`schemas.grandfathered.Grandfathered`. Finally append to the grandfathered
         list.
 
         :raise exceptions.invalid.invalid_grandfathered_data_error.InvalidGrandfatheredDataError:"""
@@ -377,7 +378,7 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
             raise InvalidGrandfatheredDataError(data_dict) from e
 
     def _load_redundant(self, data_dict: Dict[str, Any]):
-        """Get dict data and loads to :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.redundant.Redundant`. Finally append to the redundant list.
+        """Get dict data and loads to :class:`schemas.redundant.Redundant`. Finally append to the redundant list.
 
         :raise exceptions.invalid.invalid_redundant_data_error.InvalidRedundantDataError:"""
         try:
@@ -411,8 +412,8 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
         return data_dict
 
     def _parse_prefix(
-            self, prefix_list: List[str]) -> List[
-        Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
+            self,
+            prefix_list: List[str]) -> List[Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]]:
         """Parse a list of string subtags to a dict of name of va
         :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:"""
 
