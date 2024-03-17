@@ -29,6 +29,7 @@ from type_aliases import TagsOrSubtagType, SubtagType
 
 _TagParsedData = Dict[str, Union[SubtagType, List[SubtagType]]]
 
+
 class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
     """Basic in memory implementation of
     :class:`interface.bcp47_repository.bcp47_repository_interface.BCP47RepositoryInterface`. It requires implementation
@@ -216,6 +217,7 @@ class _SubtagDataFinder:
 
 
 class _SubtagDataFinderIterator:
+
     def __init__(self, subtag_data_finder: List[_SubtagDataFinder]):
         self._subtag_data_finder = subtag_data_finder
         self._list_iteration = 0
@@ -236,5 +238,3 @@ class _SubtagDataFinderIterator:
         self._list_iteration += 1
         if len(self._subtag_data_finder) <= self._list_iteration:
             raise StopIteration
-
-

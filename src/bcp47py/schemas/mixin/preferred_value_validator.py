@@ -13,4 +13,3 @@ class PreferredValueValidator:
         if values.get('preferred_value') is not None and values.get('deprecated') is None:
             raise ValueError('Preferred_value is set but deprecated is not set')
         return values
-

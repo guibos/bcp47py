@@ -55,8 +55,8 @@ class _AddNewDataReturn:
 class Repository(InMemoryBCP47RepositoryAbstract, Base):
     """Repository that provides all data from the BCP47 specification in several dataclasses."""
     _BCP47_TYPE_PROCESSING_ORDER = [
-        BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.EXTLANG, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
-        BCP47Type.REDUNDANT
+        BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.EXTLANG, BCP47Type.VARIANT,
+        BCP47Type.GRANDFATHERED, BCP47Type.REDUNDANT
     ]
     _BCP47_DEPENDENCY_FIELDS = [
         'macro_language',

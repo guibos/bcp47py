@@ -171,7 +171,9 @@ def test_bcp47_data_region_gb(repository: BCP47RepositoryInterface):
     assert region.added == datetime.datetime(2005, 10, 16, 0, 0)
     assert region.updated_at == datetime.datetime(2023, 10, 16, 0, 0)
     assert region.subtag == 'GB'
-    assert region.comments == ['as of 2006-03-29 GB no longer includes the Channel Islands and Isle of Man; see GG, JE, IM']
+    assert region.comments == [
+        'as of 2006-03-29 GB no longer includes the Channel Islands and Isle of Man; see GG, JE, IM'
+    ]
     assert region.preferred_value is None
     assert region.deprecated is None
 
@@ -200,12 +202,12 @@ def test_bcp47_data_variant_oxendict(repository: BCP47RepositoryInterface):
             ext_lang=[repository.get_ext_lang_by_subtag('')],  # FIXME:
             region=repository.get_region_by_subtag('GB'),
             script=repository.get_script_by_subtag('Latin'),
-            variant=repository.get_variant_by_subtag('fake1')
-        ),
+            variant=repository.get_variant_by_subtag('fake1')),
     ]
     assert variant.comments == []
     assert variant.preferred_value is None
     assert variant.deprecated is None
+
 
 #
 #
