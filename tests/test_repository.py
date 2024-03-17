@@ -12,7 +12,7 @@ from schemas.language_scope import LanguageScope
 from schemas.redundant import Redundant
 from schemas.region import Region, RegionPreferredValue
 from schemas.script import Script
-from schemas.variant import Variant, VariantPrefix
+from schemas.variant import Variant, VariantPrefix, VariantPreferredValue
 from type_aliases import TagsOrSubtagType, MainDataObjects
 
 
@@ -108,6 +108,7 @@ def test_language_fake(repository: BCP47RepositoryInterface):
     assert language.comments == ['Fake language comment', 'Another language']
     assert language.suppress_script is None
     assert language.preferred_value == LanguagePreferredValue(language=repository.get_language_by_subtag('en'))
+    assert language.preferred_value.tag == 'en'
     assert language.deprecated == datetime.datetime(2023, 8, 2)
 
 
@@ -129,10 +130,12 @@ def test_bcp47_data_ext_lang_f1(repository: BCP47RepositoryInterface):
     assert ext_lang.updated_at == datetime.datetime(2023, 10, 16, 0, 0)
     assert ext_lang.subtag == 'f1'
     assert ext_lang.preferred_value == ExtLangPreferredValue(language=repository.get_language_by_subtag('f1'))
+    assert ext_lang.preferred_value.tag == 'f1'
     assert ext_lang.prefix == [
         ExtLangPrefix(language=repository.get_language_by_subtag('f1')),
         ExtLangPrefix(language=repository.get_language_by_subtag('aav')),
     ]
+    assert ext_lang.prefix[0].tag == 'f1'
     assert ext_lang.macro_language == repository.get_language_by_subtag('aav')
     assert ext_lang.deprecated == datetime.datetime(2010, 7, 29, 0, 0)
 
@@ -145,9 +148,11 @@ def test_bcp47_data_ext_lang_en(repository: BCP47RepositoryInterface):
     assert ext_lang.updated_at == datetime.datetime(2023, 10, 16, 0, 0)
     assert ext_lang.subtag == 'en'
     assert ext_lang.preferred_value == ExtLangPreferredValue(language=repository.get_language_by_subtag('en'))
+    assert ext_lang.preferred_value.tag == 'en'
     assert ext_lang.prefix == [
         ExtLangPrefix(language=repository.get_language_by_subtag('f1')),
     ]
+    assert ext_lang.prefix[0].tag == 'f1'
     assert ext_lang.macro_language is None
     assert ext_lang.deprecated is None
 
@@ -161,6 +166,7 @@ def test_bcp47_data_region_fk(repository: BCP47RepositoryInterface):
     assert region.subtag == 'FK'
     assert region.comments == []
     assert region.preferred_value == RegionPreferredValue(region=repository.get_region_by_subtag('GB'))
+    assert region.preferred_value.tag() == 'GB'
     assert region.deprecated == datetime.datetime(2010, 7, 29, 0, 0)
 
 
@@ -180,7 +186,7 @@ def test_bcp47_data_region_gb(repository: BCP47RepositoryInterface):
 
 def test_bcp47_data_variant_fk(repository: BCP47RepositoryInterface):
     variant = repository.get_variant_by_subtag('fake1')
-    assert variant.description == ['Valencian']
+    assert variant.description == ['Variant test 1', 'Variant test 2'] != ['Valencian']
     assert variant.added == datetime.datetime(2005, 4, 17, 0, 0)
     assert variant.updated_at == datetime.datetime(2023, 10, 16, 0, 0)
     assert variant.subtag == 'fake1'
@@ -199,14 +205,20 @@ def test_bcp47_data_variant_oxendict(repository: BCP47RepositoryInterface):
     assert variant.prefix == [
         VariantPrefix(
             language=repository.get_language_by_subtag('en'),
-            ext_lang=[repository.get_ext_lang_by_subtag('')],  # FIXME:
+            extlang=[repository.get_ext_lang_by_subtag('en'),
+                     repository.get_ext_lang_by_subtag('f1')],  # FIXME:
             region=repository.get_region_by_subtag('GB'),
-            script=repository.get_script_by_subtag('Latin'),
-            variant=repository.get_variant_by_subtag('fake1')),
+            script=repository.get_script_by_subtag('Latn'),
+            variant=[repository.get_variant_by_subtag('fake1')]),
+        VariantPrefix(language=repository.get_language_by_subtag('aav'),
+                      extlang=[repository.get_ext_lang_by_subtag('f1')],
+                      region=repository.get_region_by_subtag('FK'),
+                      script=repository.get_script_by_subtag('Fake'),
+                      variant=[repository.get_variant_by_subtag('fake1')]),
     ]
-    assert variant.comments == []
-    assert variant.preferred_value is None
-    assert variant.deprecated is None
+    assert variant.comments == ['test variant']
+    assert variant.deprecated == datetime.datetime(2010, 7, 29, 0, 0)
+    assert variant.preferred_value == VariantPreferredValue(variant=[repository.get_variant_by_subtag('fake1')])
 
 
 #

@@ -225,7 +225,7 @@ class _SubtagDataFinderIterator:
 
     def next(self) -> _SubtagDataFinder:
         self._subtag_repetition += 1
-        if self._subtag_data_finder[self._list_iteration].max_subtags < self._subtag_repetition:
+        if self._subtag_data_finder[self._list_iteration].max_subtags <= self._subtag_repetition:
             return self._next_subtag_finder()
         return self._subtag_data_finder[self._list_iteration]
 

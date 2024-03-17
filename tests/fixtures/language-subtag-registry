@@ -79,6 +79,8 @@ Type: variant
 Subtag: oxendict
 Description: Oxford English Dictionary spelling
 Added: 2005-04-17
-Prefix: en-en-Latn-GB-fake1
+Prefix: en-en-f1-Latn-GB-fake1
 Prefix: aav-f1-Fake-FK-fake1
 Comments: test variant
+Deprecated: 2010-07-29
+Preferred-Value: fake1

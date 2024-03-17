@@ -17,6 +17,7 @@ class LanguagePreferredValue(PreferredValue):
     Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
     language: 'Language'
 
+    @property
     def tag(self) -> Annotated[str, TAG_FIELD_INFO]:
         return self.language.subtag
 
