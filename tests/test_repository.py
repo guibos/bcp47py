@@ -216,9 +216,11 @@ def test_bcp47_data_variant_oxendict(repository: BCP47RepositoryInterface):
                       script=repository.get_script_by_subtag('Fake'),
                       variant=[repository.get_variant_by_subtag('fake1')]),
     ]
+    assert variant.prefix[0].tag == 'en-en-f1-Latn-GB-fake1'
     assert variant.comments == ['test variant']
     assert variant.deprecated == datetime.datetime(2010, 7, 29, 0, 0)
     assert variant.preferred_value == VariantPreferredValue(variant=[repository.get_variant_by_subtag('fake1')])
+    assert variant.preferred_value.tag == 'fake1'
 
 
 #

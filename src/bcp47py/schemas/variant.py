@@ -19,8 +19,9 @@ class VariantPreferredValue(PreferredValue):
 
     variant: List['Variant'] = []
 
+    @property
     def tag(self) -> Annotated[str, TAG_FIELD_INFO]:
-        return self.variant.subtag
+        return '-'.join(variant.subtag for variant in self.variant)
 
 
 class VariantPrefix(ExtLangPrefix):
@@ -37,9 +38,9 @@ class VariantPrefix(ExtLangPrefix):
 
     @property
     def tag(self) -> str:
-        return '-'.join((subtag.subtag
-                         for subtag in (self.language, self.ext_lang, self.script, self.region, self.variant)
-                         if subtag))
+        return '-'.join((subtag for subtag in (self.language.subtag, '-'.join(
+            extlang.subtag for extlang in self.extlang), self.script.subtag, self.region.subtag, '-'.join(
+                variant.subtag for variant in self.variant)) if subtag))
 
 
 class Variant(Subtag, PreferredValueValidator):
