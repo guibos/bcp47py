@@ -55,8 +55,8 @@ class _AddNewDataReturn:
 class Repository(InMemoryBCP47RepositoryAbstract, Base):
     """Repository that provides all data from the BCP47 specification in several dataclasses."""
     _BCP47_TYPE_PROCESSING_ORDER = [
-        BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
-        BCP47Type.REDUNDANT, BCP47Type.EXTLANG
+        BCP47Type.SCRIPT, BCP47Type.LANGUAGE, BCP47Type.REGION, BCP47Type.EXTLANG, BCP47Type.VARIANT, BCP47Type.GRANDFATHERED,
+        BCP47Type.REDUNDANT
     ]
     _BCP47_DEPENDENCY_FIELDS = [
         'macro_language',
@@ -190,6 +190,10 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
                 sort_order = -1
             else:
                 sort_order = 0
+        elif a.get('added') < b.get('added'):
+            sort_order = 1
+        elif a.get('added') > b.get('added'):
+            sort_order = -1
         else:
             sort_order = 0
         return sort_order

@@ -25,8 +25,9 @@ from schemas.region import Region
 from schemas.script import Script
 from schemas.subtags import Subtags
 from schemas.variant import Variant
-from type_aliases import TagsOrSubtagType
+from type_aliases import TagsOrSubtagType, SubtagType
 
+_TagParsedData = Dict[str, Union[SubtagType, List[SubtagType]]]
 
 class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
     """Basic in memory implementation of
@@ -44,11 +45,11 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
         self._redundant: List[Redundant] = []
 
         self._SUBTAG_DATA_FINDER = [
-            _SubtagDataFinder(self.get_language_by_subtag, BCP47Type.LANGUAGE),
-            _SubtagDataFinder(self.get_ext_lang_by_subtag, BCP47Type.EXTLANG),
-            _SubtagDataFinder(self.get_script_by_subtag, BCP47Type.SCRIPT),
-            _SubtagDataFinder(self.get_region_by_subtag, BCP47Type.REGION),
-            _SubtagDataFinder(self.get_variant_by_subtag, BCP47Type.VARIANT)
+            _SubtagDataFinder(self.get_language_by_subtag, BCP47Type.LANGUAGE, 1),
+            _SubtagDataFinder(self.get_ext_lang_by_subtag, BCP47Type.EXTLANG, 3),
+            _SubtagDataFinder(self.get_script_by_subtag, BCP47Type.SCRIPT, 1),
+            _SubtagDataFinder(self.get_region_by_subtag, BCP47Type.REGION, 1),
+            _SubtagDataFinder(self.get_variant_by_subtag, BCP47Type.VARIANT, 999)
         ]
         self._load_data()
 
@@ -160,21 +161,34 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
         """Method that parse a string tag and return a Dict with all subtag objects contained in previous string tag.
         :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:
         """
-        i = 0
-        tag_or_subtag_data = {}
+        tag_parsed_data = {}
+
+        iterator = _SubtagDataFinderIterator(self._SUBTAG_DATA_FINDER)
         for subtag in tag.split('-'):
-            while True:
-                if i >= len(self._SUBTAG_DATA_FINDER):
+            found = False
+            while found is False:
+                try:
+                    subtag_data_finder = iterator.next()
+                except StopIteration:
                     raise TagOrSubtagNotFoundError(f"Subtag {subtag} of {tag} is not found.")
                 try:
-                    tag_or_subtag_data[
-                        self._SUBTAG_DATA_FINDER[i].bcp47_subtag_type.value] = self._SUBTAG_DATA_FINDER[i].callable(
-                            subtag, case_sensitive)
-                    break
+                    value = subtag_data_finder.callable(subtag, case_sensitive)
                 except TagOrSubtagNotFoundError:
-                    i += 1
+                    try:
+                        iterator.next_subtag_type()
+                    except StopIteration:
+                        raise TagOrSubtagNotFoundError(f"Subtag {subtag} of {tag} is not found.")
                     continue
-        return tag_or_subtag_data
+
+                if subtag_data_finder.max_subtags == 1:
+                    tag_parsed_data[subtag_data_finder.bcp47_subtag_type.value] = value
+                else:
+                    try:
+                        tag_parsed_data[subtag_data_finder.bcp47_subtag_type.value].append(value)
+                    except KeyError:
+                        tag_parsed_data[subtag_data_finder.bcp47_subtag_type.value] = [value]
+                found = True
+        return tag_parsed_data
 
     @abc.abstractmethod
     def _load_data(self):
@@ -188,3 +202,39 @@ class _SubtagDataFinder:
     a specific order to parse a bcp47 tag."""
     callable: Callable[[str, bool], Any]
     bcp47_subtag_type: BCP47Type
+    max_subtags: int
+
+    def add_subtag_to_tag_parsed_data(self, tag_parsed_data: _TagParsedData, value: SubtagType) -> _TagParsedData:
+        if self.max_subtags == 1:
+            tag_parsed_data['bcp47_subtag_type'] = value
+        else:
+            try:
+                tag_parsed_data['bcp47_subtag_type'].append(value)
+            except KeyError:
+                tag_parsed_data['bcp47_subtag_type'] = [value]
+        return tag_parsed_data
+
+
+class _SubtagDataFinderIterator:
+    def __init__(self, subtag_data_finder: List[_SubtagDataFinder]):
+        self._subtag_data_finder = subtag_data_finder
+        self._list_iteration = 0
+        self._subtag_repetition = -1
+
+    def next(self) -> _SubtagDataFinder:
+        self._subtag_repetition += 1
+        if self._subtag_data_finder[self._list_iteration].max_subtags < self._subtag_repetition:
+            return self._next_subtag_finder()
+        return self._subtag_data_finder[self._list_iteration]
+
+    def _next_subtag_finder(self) -> _SubtagDataFinder:
+        self.next_subtag_type()
+        return self.next()
+
+    def next_subtag_type(self):
+        self._subtag_repetition = -1
+        self._list_iteration += 1
+        if len(self._subtag_data_finder) <= self._list_iteration:
+            raise StopIteration
+
+

@@ -41,8 +41,8 @@ Type: extlang
 Subtag: en
 Description: Ext lang 1
 Added: 2009-07-29
-Preferred-Value: en
 Prefix: f1
+Preferred-Value: en
 %%
 Type: extlang
 Subtag: f1

@@ -17,7 +17,7 @@ class VariantPreferredValue(PreferredValue):
 
     Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.abstract.preferred_value.PreferredValue` class for more information about preferred value."""
 
-    variant: 'Variant'
+    variant: List['Variant'] = []
 
     def tag(self) -> Annotated[str, TAG_FIELD_INFO]:
         return self.variant.subtag
@@ -30,10 +30,10 @@ class VariantPrefix(ExtLangPrefix):
 
     Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.abstract.prefix.Prefix` class for more information about prefix."""
 
-    ext_lang: Optional[ExtLang] = None
+    extlang: List[ExtLang] = []
     script: Optional[Script] = None
     region: Optional[Region] = None
-    variant: Optional['Variant'] = None
+    variant: List['Variant'] = []
 
     @property
     def tag(self) -> str:

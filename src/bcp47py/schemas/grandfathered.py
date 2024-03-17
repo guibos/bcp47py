@@ -21,7 +21,7 @@ class GrandfatheredPreferredValue(PreferredValue):
     Check :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.interface.preferred_value.PreferredValue` class for more information about preferred value."""
     language: Language
     region: Optional[Region] = None
-    variant: Optional[Variant] = None
+    variant: List[Variant] = []
     model_config = ConfigDict(extra='forbid')
 
     def tag(self):
