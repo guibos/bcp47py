@@ -8,7 +8,7 @@ from schemas.abstract.preferred_value import PreferredValue
 from schemas.field_info import COMMENTS_FIELD_INFO
 from schemas.language import Language
 from schemas.mixin.preferred_value_validator import PreferredValueValidator
-from schemas.mixin.tag import Tag
+from schemas.mixin.tag import Tag, _TAG_FIELD_INFO
 from schemas.region import Region
 from schemas.variant import Variant
 
@@ -25,7 +25,7 @@ class GrandfatheredPreferredValue(PreferredValue):
     model_config = ConfigDict(extra='forbid')
 
     def tag(self):
-        return '-'.join([subtag.subtag for subtag in [self.language, self.region, self.variant] if subtag])
+        return '-'.join([subtag.subtag for subtag in [self.language, self.region, *self.variant] if subtag])
 
 
 class Grandfathered(Tag, PreferredValueValidator):
@@ -33,6 +33,7 @@ class Grandfathered(Tag, PreferredValueValidator):
     of these registered tags remain valid as language tags.
 
     For more information: https://www.rfc-editor.org/rfc/bcp/bcp47.txt"""
+    tag: Annotated[str, _TAG_FIELD_INFO]
     comments: Annotated[List[str], COMMENTS_FIELD_INFO] = []
     preferred_value: Optional['GrandfatheredPreferredValue'] = None
     deprecated: Optional[datetime] = None

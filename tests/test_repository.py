@@ -9,7 +9,7 @@ from schemas.ext_lang import ExtLang, ExtLangPrefix, ExtLangPreferredValue
 from schemas.grandfathered import Grandfathered
 from schemas.language import Language, LanguagePreferredValue
 from schemas.language_scope import LanguageScope
-from schemas.redundant import Redundant
+from schemas.redundant import Redundant, RedundantPreferredValue
 from schemas.region import Region, RegionPreferredValue
 from schemas.script import Script
 from schemas.variant import Variant, VariantPrefix, VariantPreferredValue
@@ -223,16 +223,16 @@ def test_bcp47_data_variant_oxendict(repository: BCP47RepositoryInterface):
     assert variant.preferred_value.tag == 'fake1'
 
 
-#
-#
-# def test_bcp47_data_grandfathered(repository: BCP47RepositoryInterface):
-#     assert repository.grandfathered
-#
-#     for grandfathered in repository.grandfathered:
-#         assert isinstance(grandfathered, Grandfathered)
-#
-#     gaulish = repository.get_grandfathered_by_tag('cel-gaulish')
-#     assert gaulish.description == ['Gaulish']
+def test_bcp47_data_redundant(repository: BCP47RepositoryInterface):
+    redundant = repository.get_redundant_by_tag('f1')
+    assert redundant.added == datetime.datetime(1999, 12, 18, 0, 0)
+    assert redundant.deprecated == datetime.datetime(2009, 7, 29, 0, 0)
+    assert redundant.description == ['English Latin']
+    assert redundant.preferred_value == RedundantPreferredValue(language=repository.get_language_by_subtag('en'), )
+    assert redundant.tag == 'f1'
+    assert redundant.updated_at == datetime.datetime(2023, 10, 16, 0, 0)
+
+
 #
 #
 # def test_bcp47_data_redundant(repository: BCP47RepositoryInterface):

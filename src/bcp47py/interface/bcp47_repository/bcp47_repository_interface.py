@@ -8,7 +8,7 @@ from schemas.language_scope import LanguageScope
 from schemas.redundant import Redundant
 from schemas.region import Region
 from schemas.script import Script
-from schemas.subtags import Subtags
+from schemas.parsed_tag import ParsedTag
 from schemas.variant import Variant
 
 
@@ -96,5 +96,5 @@ class BCP47RepositoryInterface(abc.ABC):
         """Return a Redundant by his tag."""
 
     @abc.abstractmethod
-    def tag_parser(self, tag: str, case_sensitive: bool = False) -> Subtags:
+    def tag_parser(self, tag: str, case_sensitive: bool = False) -> ParsedTag:
         """Parse string tag to get all subtags."""

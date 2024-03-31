@@ -1,4 +1,5 @@
 """Module that contains Tag abstract class."""
+from abc import abstractmethod
 from typing import Annotated
 
 from pydantic import Field
@@ -17,7 +18,10 @@ _TAG_FIELD_INFO = Field(
 class Tag(BaseType):
     """Mixin that must be used by tag types (only :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.redundant.Redundant` and
     :class:`from exceptions.invalid.mixin.invalid_data_error import InvalidDataErrorschemas.grandfathered.Grandfathered` types)."""
-    tag: Annotated[str, _TAG_FIELD_INFO]
+
+    @property
+    def tag(self) -> Annotated[str, _TAG_FIELD_INFO]:
+        raise NotImplementedError
 
     @property
     def tag_str(self) -> str:

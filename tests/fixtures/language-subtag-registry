@@ -84,3 +84,10 @@ Prefix: aav-f1-Fake-FK-fake1
 Comments: test variant
 Deprecated: 2010-07-29
 Preferred-Value: fake1
+%%
+Type: redundant
+Tag: f1
+Description: English Latin
+Added: 1999-12-18
+Deprecated: 2009-07-29
+Preferred-Value: en

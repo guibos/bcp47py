@@ -38,9 +38,8 @@ class VariantPrefix(ExtLangPrefix):
 
     @property
     def tag(self) -> str:
-        return '-'.join((subtag for subtag in (self.language.subtag, '-'.join(
-            extlang.subtag for extlang in self.extlang), self.script.subtag, self.region.subtag, '-'.join(
-                variant.subtag for variant in self.variant)) if subtag))
+        return '-'.join(subtag.subtag
+                        for subtag in (self.language, *self.extlang, self.script, self.region, *self.variant) if subtag)
 
 
 class Variant(Subtag, PreferredValueValidator):

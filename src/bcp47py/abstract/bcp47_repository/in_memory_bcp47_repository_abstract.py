@@ -23,7 +23,7 @@ from schemas.language_scope import LanguageScope
 from schemas.redundant import Redundant
 from schemas.region import Region
 from schemas.script import Script
-from schemas.subtags import Subtags
+from schemas.parsed_tag import ParsedTag
 from schemas.variant import Variant
 from type_aliases import TagsOrSubtagType, SubtagType
 
@@ -139,9 +139,9 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
         except TagOrSubtagNotFoundError as e:
             raise RedundantTagNotFoundError(tag) from e
 
-    def tag_parser(self, tag: str, case_sensitive: bool = False) -> Subtags:
+    def tag_parser(self, tag: str, case_sensitive: bool = False) -> ParsedTag:
         """Method that parse a bcp47 string tag and return a dataclass with all subtags information."""
-        return Subtags(**self._tag_parser(tag, case_sensitive))
+        return ParsedTag(**self._tag_parser(tag, case_sensitive))
 
     @staticmethod
     def _subtag_filter(subtag_str: str, tag_or_subtag_list: List[TagsOrSubtagType],
@@ -157,12 +157,18 @@ class InMemoryBCP47RepositoryAbstract(BCP47RepositoryInterface, ABC):
                 return subtag
         raise TagOrSubtagNotFoundError(subtag_str)
 
-    def _tag_parser(self, tag: str,
-                    case_sensitive: bool) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang]]:
+    def _tag_parser(
+            self, tag: str,
+            case_sensitive: bool) -> Dict[str, Union[Language, ExtLang, Script, Region, Variant, ExtLang, Redundant]]:
         """Method that parse a string tag and return a Dict with all subtag objects contained in previous string tag.
         :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:
         """
         tag_parsed_data = {}
+        try:
+            redundant = self.get_redundant_by_tag(tag)
+            tag_parsed_data[BCP47Type.REDUNDANT.value] = redundant
+        except RedundantTagNotFoundError:
+            pass
 
         iterator = _SubtagDataFinderIterator(self._SUBTAG_DATA_FINDER)
         for subtag in tag.split('-'):

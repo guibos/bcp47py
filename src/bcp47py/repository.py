@@ -306,7 +306,7 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
         except KeyError:
             raise UnexpectedBCP47MissingTypeError() from KeyError
 
-        data_dict = self._replace_to_object(data_dict)
+        data_dict = self._replace_to_object(data_dict, bcp47_type)
 
         if bcp47_type == BCP47Type.LANGUAGE:
             self._load_language(data_dict)
@@ -390,7 +390,7 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
         except ValidationError as e:
             raise InvalidRedundantDataError(data_dict) from e
 
-    def _replace_to_object(self, data_dict: Dict[str, Any]) -> Dict[str, Any]:
+    def _replace_to_object(self, data_dict: Dict[str, Any], bcp47_type: BCP47Type) -> Dict[str, Any]:
         """From dict data replace string values that should be references to objects.
 
         :raise exceptions.not_found.tag_or_subtag_not_found_error.TagOrSubtagNotFoundError:
@@ -412,6 +412,9 @@ class Repository(InMemoryBCP47RepositoryAbstract, Base):
 
         if prefix_s := data_dict.pop('prefix', None):
             data_dict['prefix'] = self._parse_prefix(prefix_s)
+
+        if bcp47_type == BCP47Type.REDUNDANT:
+            data_dict['subtags'] = self._tag_parser(data_dict.pop('tag'), case_sensitive=True)
 
         return data_dict
 
